@@ -4,11 +4,11 @@ package main;
  * Placeholder javadoc.
  */
 public class Task {
-  String taskType;
-  String taskName;
-  int taskDuration;
-  boolean isRecurring;
-  int recurrenceCount;
-  boolean isAntiTask;
-  int taskStartTime;
+  private String taskType;
+  private String taskName;
+  private int taskDuration;
+  private boolean isRecurring;
+  private int recurrenceCount;
+  private boolean isAntiTask;
+  private int taskStartTime;
 }
