@@ -3,12 +3,16 @@
 # and places them into the bin folder.
 
 # All the functions to run.
-all: Files
+all: Main Test
 
-# Files function, uses all .java files in src.
-Files: $(wildcard ../src/*.java)
-	javac -d ../bin/ $^
+# Main function, creates the main program.
+Main: $(wildcard ../src/main/*.java)
+	javac -d ../bin/ $^ -cp ../bin/
+
+# Test function, creates the test files.
+Test: $(wildcard ../src/test/*.java)
+	javac -d ../bin/test/ $^ -cp ../bin/
 
 # Cleans up every class file in bin.
 clean:
-	rm -rf ../bin/*.class
+	rm -rf ../bin/*
