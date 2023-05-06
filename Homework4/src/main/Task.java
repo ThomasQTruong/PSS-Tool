@@ -1,66 +1,39 @@
 package main;
+import java.io.*;
 
 /**
  * Placeholder javadoc.
  */
-public class Task {
-  private String taskType;
-  private String taskName;
-  private int taskDuration;
-  private boolean isRecurring;
-  private int recurrenceCount;
-  private boolean isAntiTask;
-  private int taskStartTime;
 
+public interface Task{
+  String taskType = "";
+  String taskName = "";
+  int taskDuration = 0;
+  boolean isAntiTask = false;
+  int taskStartTime = 0;
+
+  // Java Interface Abstract Methods (Don't have bodies)
+
+  // Setter Methods
+  public void setTaskStartTime();
+
+  public void setTaskEndTime();
   
-  //Placeholder Setter Methods
-  
+  public void setTaskDuration();
 
-  public void setTaskStartTime() {
+  public void setTaskName();
 
-  }
+  public void setRecurring();
 
-  public void setTaskEndTime() {
+  // Getter Methods
 
-  }
-  
-  public void setTaskDuration() {
-    
-  }
+  public int getTaskTime();
 
-  public void setTaskName( ) {
+  public int getTaskDuration();
 
-  }
+  public String getTaskName();
 
-  public void setRecurring() {
+  public boolean getRecurring();
 
-  }
-  
-  // Placeholder Getter Methods
- 
-  public int getTaskTime() {
-    return 0;
-  }
-
-  public int getTaskDuration() {
-    return 0;
-  }
-
-  public String getTaskName() {
-    return "";
-  }
-
-  public boolean getRecurring() {
-    return true;
-  }
-
-  /* 
-   * Test function that prints out "Testing" when ran
-   */
-  public void test() {
-    System.out.println("Testing");
-  }
-
-  
 }
 
