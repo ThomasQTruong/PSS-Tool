@@ -16,43 +16,50 @@ public class Task {
    * 
    */
 
-  public void setTaskStartTime(){
+  public void setTaskStartTime() {
 
   }
 
-  public void setTaskEndTime(){
+  public void setTaskEndTime() {
 
   }
   
-  public void setTaskDuration(){
+  public void setTaskDuration() {
     
   }
 
-  public void setTaskName(){
+  public void setTaskName( ){
 
   }
 
-  public void setRecurring(){
+  public void setRecurring() {
 
   }
   
   /* Getter Methods
    * 
    */
-  public int getTaskTime(){
+  public int getTaskTime() {
     return 0;
   }
 
-  public int getTaskDuration(){
+  public int getTaskDuration() {
     return 0;
   }
 
-  public String getTaskName(){
+  public String getTaskName() {
     return "";
   }
 
-  public boolean getRecurring(){
+  public boolean getRecurring() {
     return true;
+  }
+
+  /* Test function that prints out "Testing" when ran
+   * 
+   */
+  public void test() {
+    System.out.println("Testing");
   }
 
   
