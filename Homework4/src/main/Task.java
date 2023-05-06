@@ -13,9 +13,7 @@ public class Task {
   private int taskStartTime;
 
   
-  //Placeholder Setter Methods
-  
-
+  // Setter Methods
   public void setTaskStartTime() {
 
   }
@@ -28,16 +26,16 @@ public class Task {
     
   }
 
-  public void setTaskName( ) {
+  public void setTaskName() {
 
   }
 
   public void setRecurring() {
 
   }
-  
-  // Placeholder Getter Methods
- 
+
+
+  // Getter Methods
   public int getTaskTime() {
     return 0;
   }
@@ -52,15 +50,5 @@ public class Task {
 
   public boolean getRecurring() {
     return true;
-  }
-
-  /* 
-   * Test function that prints out "Testing" when ran
-   */
-  public void test() {
-    System.out.println("Testing");
-  }
-
-  
+  }  
 }
-
