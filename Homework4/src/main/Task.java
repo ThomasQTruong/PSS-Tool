@@ -12,9 +12,9 @@ public class Task {
   private boolean isAntiTask;
   private int taskStartTime;
 
-  /* Setter Methods
-   * 
-   */
+  
+  //Placeholder Setter Methods
+  
 
   public void setTaskStartTime() {
 
@@ -28,7 +28,7 @@ public class Task {
     
   }
 
-  public void setTaskName( ){
+  public void setTaskName( ) {
 
   }
 
@@ -36,9 +36,8 @@ public class Task {
 
   }
   
-  /* Getter Methods
-   * 
-   */
+  // Placeholder Getter Methods
+ 
   public int getTaskTime() {
     return 0;
   }
@@ -55,8 +54,8 @@ public class Task {
     return true;
   }
 
-  /* Test function that prints out "Testing" when ran
-   * 
+  /* 
+   * Test function that prints out "Testing" when ran
    */
   public void test() {
     System.out.println("Testing");
