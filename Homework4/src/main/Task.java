@@ -12,30 +12,29 @@ public interface Task {
   // Common variables.
   String name = "";
   int type = 0;
-  long startDate = 0;
-  long startTime = 0;
-  long duration = 0;
+  int startDate = 0;
+  int startTime = 0;
+  int duration = 0;
 
 
+  // Common setter methods.
+  public void setName(String newName);
 
-  // Setter Methods.
-  public void setTaskStartTime();
+  public void setStartTime(int newTime);
 
-  public void setTaskEndTime();
+  public void setDuration(int newDuration);
 
-  public void setTaskDuration();
-
-  public void setTaskName();
-
-  public void setRecurring();
+  public void setDate(int newDate);
 
 
-  // Getter Methods.
-  public int getTaskTime();
+  // Common getter methods.
+  public String getName();
 
-  public int getTaskDuration();
+  public int getType();
 
-  public String getTaskName();
+  public int getStartTime();
 
-  public boolean getRecurring();
+  public int getDuration();
+
+  public int getStartDate();
 }
