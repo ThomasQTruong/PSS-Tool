@@ -4,7 +4,7 @@ package main;
  * Placeholder javadoc.
  */
 public class PSS {
-  User user;
+  private Schedule schedule;
 
   int main() {
     return 0;
