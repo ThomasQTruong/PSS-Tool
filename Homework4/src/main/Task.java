@@ -1,54 +1,38 @@
 package main;
+import java.io.*;
 
 /**
  * Placeholder javadoc.
  */
-public class Task {
-  private String taskType;
-  private String taskName;
-  private int taskDuration;
-  private boolean isRecurring;
-  private int recurrenceCount;
-  private boolean isAntiTask;
-  private int taskStartTime;
 
-  
+public interface Task{
+  String taskType = "";
+  String taskName = "";
+  int taskDuration = 0;
+  boolean isAntiTask = false;
+  int taskStartTime = 0;
+
+  // Java Interface Abstract Methods (Don't have bodies)
+
   // Setter Methods
-  public void setTaskStartTime() {
+  public void setTaskStartTime();
 
-  }
-
-  public void setTaskEndTime() {
-
-  }
+  public void setTaskEndTime();
   
-  public void setTaskDuration() {
-    
-  }
+  public void setTaskDuration();
 
-  public void setTaskName() {
+  public void setTaskName();
 
-  }
-
-  public void setRecurring() {
-
-  }
-
+  public void setRecurring();
 
   // Getter Methods
-  public int getTaskTime() {
-    return 0;
-  }
 
-  public int getTaskDuration() {
-    return 0;
-  }
+  public int getTaskTime();
 
-  public String getTaskName() {
-    return "";
-  }
+  public int getTaskDuration();
 
-  public boolean getRecurring() {
-    return true;
-  }  
+  public String getTaskName();
+
+  public boolean getRecurring();
+
 }
