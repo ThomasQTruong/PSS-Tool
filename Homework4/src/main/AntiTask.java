@@ -4,7 +4,7 @@ package main;
  * Placeholder javadoc.
  */
 public class AntiTask implements Task {
-  // Common setter methods.
+  // Setter methods.
   public void setName(String newName) {
   }
 
@@ -18,7 +18,7 @@ public class AntiTask implements Task {
   }
 
 
-  // Common getter methods.
+  // Getter methods.
   public String getName() {
     return name;
   }
