@@ -1,32 +1,36 @@
 package main;
-import java.io.*;
 
 /**
- * Placeholder javadoc.
+ * Template for the different task types.
  */
+public interface Task {
+  // Type Identifier.
+  public static final int RECURRING_TASK = 1;
+  public static final int TRANSIENT_TASK = 2;
+  public static final int ANTI_TASK = 3;
 
-public interface Task{
-  String taskType = "";
-  String taskName = "";
-  int taskDuration = 0;
-  boolean isAntiTask = false;
-  int taskStartTime = 0;
+  // Common variables.
+  String name = "";
+  int type = 0;
+  long startDate = 0;
+  long startTime = 0;
+  long duration = 0;
 
-  // Java Interface Abstract Methods (Don't have bodies)
 
-  // Setter Methods
+
+  // Setter Methods.
   public void setTaskStartTime();
 
   public void setTaskEndTime();
-  
+
   public void setTaskDuration();
 
   public void setTaskName();
 
   public void setRecurring();
 
-  // Getter Methods
 
+  // Getter Methods.
   public int getTaskTime();
 
   public int getTaskDuration();
@@ -34,5 +38,4 @@ public interface Task{
   public String getTaskName();
 
   public boolean getRecurring();
-
 }
