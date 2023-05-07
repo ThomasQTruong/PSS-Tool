@@ -7,7 +7,7 @@ public class RecurringTask implements Task {
   int endDate = 0;
   int frequency = 0;
 
-  // Common setter methods.
+  // Setter methods.
   public void setName(String newName) {
   }
 
@@ -20,8 +20,14 @@ public class RecurringTask implements Task {
   public void setStartDate(int newDate) {
   }
 
+  public void setEndDate(int newDate) {
+  }
 
-  // Common getter methods.
+  public void setFrequency(int newFrequency) {
+  }
+
+
+  // Getter methods.
   public String getName() {
     return name;
   }
@@ -40,5 +46,13 @@ public class RecurringTask implements Task {
 
   public int getStartDate() {
     return startDate;
+  }
+
+  public int getEndDate() {
+    return endDate;
+  }
+
+  public int getFrequency() {
+    return frequency;
   }
 }
