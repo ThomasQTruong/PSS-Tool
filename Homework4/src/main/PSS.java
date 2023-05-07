@@ -4,8 +4,9 @@ package main;
  * Placeholder javadoc.
  */
 public class PSS {
+  User user;
+
   int main() {
-    System.out.println("Testing");
     return 0;
   }
 }
