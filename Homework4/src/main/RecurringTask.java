@@ -1,47 +1,41 @@
 package main;
 
+/**
+ * Placeholder javadoc.
+ */
 public class RecurringTask implements Task {
+  // Common setter methods.
+  public void setName(String newName) {
+  }
 
-    boolean isRecurring = false;
-    int recurrenceCount = 0;
-    
-     // Setter Methods
-  public void setTaskStartTime() {
+  public void setStartTime(int newTime) {
+  }
 
-  };
+  public void setDuration(int newDuration) {
+  }
 
-  public void setTaskEndTime() {
+  public void setDate(int newDate) {
+  }
 
-  };
-  
-  public void setTaskDuration() {
 
-  };
+  // Common getter methods.
+  public String getName() {
+    return name;
+  }
 
-  public void setTaskName() {
+  public int getType() {
+    return type;
+  }
 
-  };
+  public int getStartTime() {
+    return startTime;
+  }
 
-  public void setRecurring() {
+  public int getDuration() {
+    return duration;
+  }
 
-  };
-
-  // Getter Methods
-
-  public int getTaskTime() {
-
-    return 0;
-  };
-
-  public int getTaskDuration() {
-    return 0;
-  };
-
-  public String getTaskName() {
-    return "0";
-  };
-
-  public boolean getRecurring() {
-    return false;
+  public int getStartDate() {
+    return startDate;
   }
 }
