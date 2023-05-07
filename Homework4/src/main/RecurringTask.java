@@ -4,6 +4,9 @@ package main;
  * Placeholder javadoc.
  */
 public class RecurringTask implements Task {
+  int endDate = 0;
+  int frequency = 0;
+
   // Common setter methods.
   public void setName(String newName) {
   }
@@ -14,7 +17,7 @@ public class RecurringTask implements Task {
   public void setDuration(int newDuration) {
   }
 
-  public void setDate(int newDate) {
+  public void setStartDate(int newDate) {
   }
 
 

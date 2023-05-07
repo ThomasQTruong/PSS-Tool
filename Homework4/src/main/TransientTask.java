@@ -14,7 +14,7 @@ public class TransientTask implements Task {
   public void setDuration(int newDuration) {
   }
 
-  public void setDate(int newDate) {
+  public void setStartDate(int newDate) {
   }
 
 
