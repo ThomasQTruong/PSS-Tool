@@ -40,22 +40,27 @@ public class AntiTask implements Task {
 
 
   // Getter methods.
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public String getType() {
     return type;
   }
 
+  @Override
   public float getStartTime() {
     return startTime;
   }
 
+  @Override
   public float getDuration() {
     return duration;
   }
 
+  @Override
   public int getStartDate() {
     return startDate;
   }
