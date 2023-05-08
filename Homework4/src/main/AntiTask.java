@@ -35,7 +35,7 @@ public class AntiTask implements Task {
 
   @Override
   public void setStartDate(int startDate) {
-    this.duration = startDate;
+    this.startDate = startDate;
   }
 
 

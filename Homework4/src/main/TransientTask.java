@@ -35,7 +35,7 @@ public class TransientTask implements Task {
 
   @Override
   public void setStartDate(int startDate) {
-    this.duration = startDate;
+    this.startDate = startDate;
   }
 
 

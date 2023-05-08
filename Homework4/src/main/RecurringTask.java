@@ -37,7 +37,7 @@ public class RecurringTask implements Task {
 
   @Override
   public void setStartDate(int startDate) {
-    this.duration = startDate;
+    this.startDate = startDate;
   }
 
   public void setEndDate(int endDate) {
