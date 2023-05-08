@@ -17,7 +17,7 @@ public interface Task {
 
   public void setStartTime(float time);
 
-  public void setDuration(int duration);
+  public void setDuration(float duration);
 
   public void setStartDate(int startDate);
 

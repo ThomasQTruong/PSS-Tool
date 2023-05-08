@@ -15,29 +15,37 @@ public class RecurringTask implements Task {
 
   // Setter methods.
   @Override
-  public void setName(String name) {
+  public void setName(String newName) {
+    this.name = newName;
   }
 
   @Override
-  public void setType(String type) {
+  public void setType(String newType) {
+    this.type = newType;
   }
 
   @Override
-  public void setStartTime(float time) {
+  public void setStartTime(float newTime) {
+    this.startTime = newTime;
   }
 
   @Override
-  public void setDuration(int duration) {
+  public void setDuration(float newDuration) {
+    this.duration = newDuration;
   }
 
   @Override
-  public void setStartDate(int startDate) {
+  public void setStartDate(int newDate) {
+    this.startDate = newDate;
   }
 
+  
   public void setEndDate(int newDate) {
+    this.endDate = newDate;
   }
 
   public void setFrequency(int newFrequency) {
+    this.frequency = newFrequency;
   }
 
 
