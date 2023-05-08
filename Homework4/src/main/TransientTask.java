@@ -14,28 +14,28 @@ public class TransientTask implements Task {
 
   // Setter methods.
   @Override
-  public void setName(String newName) {
-    this.name = newName;
+  public void setName(String name) {
+    this.name = name;
   }
 
   @Override
-  public void setStartTime(float newTime) {
-    this.startTime = newTime;
+  public void setType(String type) {
+    this.type = type;
   }
 
   @Override
-  public void setDuration(float newDuration) {
-    this.duration = newDuration;
+  public void setStartTime(float startTime) {
+    this.startTime = startTime;
   }
 
   @Override
-  public void setStartDate(int newDate) {
-    this.startDate = newDate;
+  public void setDuration(float duration) {
+    this.duration = duration;
   }
 
   @Override
-  public void setType(String newType) {
-    this.type = newType;
+  public void setStartDate(int startDate) {
+    this.duration = startDate;
   }
 
 
