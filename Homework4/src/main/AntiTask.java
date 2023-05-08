@@ -4,37 +4,58 @@ package main;
  * Placeholder javadoc.
  */
 public class AntiTask implements Task {
+  public static final int TASK_TYPE = ANTI_TASK;
+  private String name = "";
+  private String type = "";
+  private int startDate = 0;
+  private float startTime = 0;
+  private float duration = 0;
+
+
   // Setter methods.
-  public void setName(String newName) {
+  @Override
+  public void setName(String name) {
   }
 
-  public void setStartTime(int newTime) {
+  @Override
+  public void setType(String type) {
   }
 
-  public void setDuration(int newDuration) {
+  @Override
+  public void setStartTime(float time) {
   }
 
-  public void setStartDate(int newDate) {
+  @Override
+  public void setDuration(int duration) {
+  }
+
+  @Override
+  public void setStartDate(int startDate) {
   }
 
 
   // Getter methods.
+  @Override
   public String getName() {
     return name;
   }
 
-  public int getType() {
+  @Override
+  public String getType() {
     return type;
   }
 
-  public int getStartTime() {
+  @Override
+  public float getStartTime() {
     return startTime;
   }
 
-  public int getDuration() {
+  @Override
+  public float getDuration() {
     return duration;
   }
 
+  @Override
   public int getStartDate() {
     return startDate;
   }

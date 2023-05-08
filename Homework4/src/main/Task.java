@@ -4,37 +4,32 @@ package main;
  * Template for the different task types.
  */
 public interface Task {
-  // Type Identifier.
+  // Type Identifier Constants.
   public static final int RECURRING_TASK = 1;
   public static final int TRANSIENT_TASK = 2;
   public static final int ANTI_TASK = 3;
 
-  // Common variables.
-  String name = "";
-  int type = 0;
-  int startDate = 0;
-  int startTime = 0;
-  int duration = 0;
-
 
   // Common setter methods.
-  public void setName(String newName);
+  public void setName(String name);
 
-  public void setStartTime(int newTime);
+  public void setType(String type);
 
-  public void setDuration(int newDuration);
+  public void setStartTime(float time);
 
-  public void setStartDate(int newDate);
+  public void setDuration(int duration);
+
+  public void setStartDate(int startDate);
 
 
   // Common getter methods.
   public String getName();
 
-  public int getType();
+  public String getType();
 
-  public int getStartTime();
+  public float getStartTime();
 
-  public int getDuration();
+  public float getDuration();
 
   public int getStartDate();
 }
