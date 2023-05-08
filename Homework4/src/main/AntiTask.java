@@ -13,22 +13,27 @@ public class AntiTask implements Task {
   private float duration = 0;
   //
 
+  @Override
   public void setName(String newName) {
     this.name = newName;
   }
 
+  @Override
   public void setStartTime(float newTime) {
     this.startTime = newTime;
   }
 
+  @Override
   public void setDuration(float newDuration) {
     this.duration = newDuration;
   }
 
+  @Override
   public void setStartDate(int newDate) {
     this.startDate = newDate;
   }
 
+  @Override
   public void setType(String newType) {
     this.type = newType;
   }
