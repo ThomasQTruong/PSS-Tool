@@ -6,13 +6,13 @@
 all: Main Test
 
 # Main function, creates the main program.
-Main: $(wildcard ../src/main/*.java)
-	javac -d ../bin/ $^ -cp ../bin/
+Main: $(wildcard ../../src/main/*.java)
+	javac -d ../../bin/ $^ -cp "../../lib/*:../../bin/"
 
 # Test function, creates the test files.
-Test: $(wildcard ../src/test/*.java)
-	javac -d ../bin/test/ $^ -cp ../bin/
+Test: $(wildcard ../../src/test/*.java)
+	javac -d ../../bin/test/ $^ -cp "../../lib/*:../../bin/"
 
 # Cleans up every class file in bin.
 clean:
-	rm -rf ../bin/*
+	rm -rf ../../bin/*
