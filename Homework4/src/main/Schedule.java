@@ -43,13 +43,13 @@ public class Schedule {
 
   // function for generating schedule
   private void generateSchedule() {
-
   }
 
   /**
    * Loads tasks from a JSON file.
-   * 
-   * @param 
+   *
+   * @param json - the json to extract data from.
+   * @return boolean - whether loading was successful or not.
    */
   public boolean loadFromJson(JsonObject json) {
     return true;
