@@ -16,3 +16,7 @@ Test: $(wildcard ../../src/test/*.java)
 # Cleans up every class file in bin.
 clean:
 	rm -rf ../../bin/*
+
+# Creates and runs the program.
+run:
+	make clean && make && java -cp ../../bin/ main.PSS
