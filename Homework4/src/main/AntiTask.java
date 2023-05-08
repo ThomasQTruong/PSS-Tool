@@ -11,8 +11,7 @@ public class AntiTask implements Task {
   private int startDate = 0;
   private float startTime = 0;
   private float duration = 0;
-  private int endDate = 0;
-  private int frequency = 0;
+  //
 
   public void setName(String newName) {
     this.name = newName;
