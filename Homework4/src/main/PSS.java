@@ -25,6 +25,7 @@ public class PSS {
           break;
         case 1:
           // Create a task.
+          createTask();
           break;
         case 2:
           // View a task.
@@ -52,6 +53,9 @@ public class PSS {
           break;
       }
     } while (userInput != 0);
+
+    // Close scanners.
+    ConsoleInput.closeScanners();
   }
 
   /**
@@ -71,9 +75,80 @@ public class PSS {
     System.out.println("[0] Exit Program");
   }
 
-  // Option 1.
+  /**
+   * Option 1.1: creates the task.
+   *
+   * @return boolean - whether the task was successfully created or not.
+   */
   private static boolean createTask() {
+    int taskIdentity = getTaskIdentity();
+
+    // Obtain common task values.
+    System.out.println("=Task Setup=");
+    String name = ConsoleInput.getString("Enter a name for the task.");
+    System.out.println();
+
+    String taskType = getTaskType(taskIdentity);
+
+    // [WIP]
+
     return true;
+  }
+
+  /**
+   * Option 1.2: Asks the user for the task identity.
+   *
+   * @return int - the identifier of the task (recurring, transient, anti).
+   */
+  private static int getTaskIdentity() {
+    System.out.println("-Task Identifier-");
+    System.out.println("[1] Recurring Task");
+    System.out.println("[2] Transient Task");
+    System.out.println("[3] Anti-Task");
+    System.out.println("[0] Cancel");
+    int taskIdentity = ConsoleInput.getIntRange("Please choose a task identity.", 0, 3);
+    System.out.println();
+    return taskIdentity;
+  }
+
+  /**
+   * Option 1.3: Asks the user for the type of task.
+   *
+   * @return String - the type of task.
+   */
+  private static String getTaskType(int taskIdentity) {
+    // Get task type.
+    Task taskType;
+    if (taskIdentity == Task.RECURRING_TASK) {
+      taskType = new RecurringTask();
+    } else if (taskIdentity == Task.TRANSIENT_TASK) {
+      taskType = new TransientTask();
+    } else {  // Anti-Task.
+      taskType = new AntiTask();
+    }
+
+    // Get amount of options for the specific task.
+    int amountOfOptions = taskType.getTypeLength();
+
+    // If there is no option for some reason, return blank.
+    if (amountOfOptions == 0) {
+      return "";
+    }
+    // If there is only one option.
+    if (amountOfOptions == 1) {
+      return taskType.getTypes()[0];
+    }
+
+    // Multiple options, list and get user's choice.
+    String[] taskTypes = taskType.getTypes();
+    System.out.println("-Task Types-");
+    for (int i = 0; i < amountOfOptions; ++i) {
+      System.out.printf("[%d] %s\n", i + 1, taskTypes[i]);
+    }
+    int userOption = ConsoleInput.getIntRange("  Please choose a task type.", 1, amountOfOptions);
+    System.out.println();
+
+    return taskTypes[userOption];
   }
 
   // Option 2.
