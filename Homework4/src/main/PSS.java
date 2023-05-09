@@ -61,7 +61,7 @@ public class PSS {
   /**
    * Prints the operations menu.
    */
-  private static void printMenu() {
+  public static void printMenu() {
     System.out.println("=Operations Menu=");
     System.out.println("[1] Create a task");
     System.out.println("[2] View a task");
@@ -90,8 +90,15 @@ public class PSS {
 
     String taskType = getTaskType(taskIdentity);
 
-    // [WIP]
+    float startTime = ConsoleInput.getFloatRange("Enter the starting time of task [0 - 23.75].",
+                                             0.0f, 23.75f);
 
+    float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
+                                                0.25f, 23.75f);
+
+    roundMinutesToNearest15(startTime);
+    // [WIP]
+ 
     return true;
   }
 
@@ -108,6 +115,7 @@ public class PSS {
     System.out.println("[0] Cancel");
     int taskIdentity = ConsoleInput.getIntRange("Please choose a task identity.", 0, 3);
     System.out.println();
+
     return taskIdentity;
   }
 
@@ -145,10 +153,32 @@ public class PSS {
     for (int i = 0; i < amountOfOptions; ++i) {
       System.out.printf("[%d] %s\n", i + 1, taskTypes[i]);
     }
-    int userOption = ConsoleInput.getIntRange("  Please choose a task type.", 1, amountOfOptions);
+    int userOption = ConsoleInput.getIntRange("Please choose a task type.", 1, amountOfOptions);
     System.out.println();
 
     return taskTypes[userOption];
+  }
+
+  public static float roundMinutesToNearest15(float toRound) {
+    // Already nearest 15 minutes.
+    if (toRound % 0.25 == 0) {
+      return toRound;
+    }
+
+    // Safer float arithmetic compared to (int) (toRound % 1 * 100).
+    int minutes = (int) (toRound * 100) - (int) (toRound) * 100;
+    // ((Round down to nearest 25)) + 25.
+    minutes = ((minutes / 25) * 25) + 25;
+    
+    // Add to toRound.
+    toRound = (int) toRound + (minutes / 100.0f);
+
+    System.out.println(minutes);
+    System.out.println(toRound);
+
+    // [WIP]
+
+    return toRound;
   }
 
   // Option 2.
