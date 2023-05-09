@@ -16,6 +16,15 @@ public class Schedule {
   }
 
   /**
+   * Retrieves the list of tasks.
+   *
+   * @return ArrayList(Task) - the list of tasks.
+   */
+  public ArrayList<Task> getTasks() {
+    return listOfTasks;
+  }
+
+  /**
    * Adds a task to listOfTasks if it is not overlapping.
    *
    * @param task - the task to add.
@@ -89,6 +98,11 @@ public class Schedule {
     }
   }
 
+  // Thomas: Probably not neccessary since the user
+  //         would choose to delete from a given list.
+  //           - Also, what if there are multiple tasks with the same name?
+  //           - I would refrain from printing outside of PSS.java.
+  //             - It would make the code usable for other types of programs (GUI).
   // remove task by its name -- Brian Kang
   public void deleteTaskByName(String taskName) {
     Task taskToDelete = null;
@@ -103,16 +117,6 @@ public class Schedule {
     } else {
       System.out.println("Task with name " + taskName + " not found.");
     }
-  }
-
-
-
-
-  // function for generating schedule
-  // added just spaceholder to avoid errors in PSS class -- Brian Kang
-  public ArrayList<Task> generateSchedule() {
-    ArrayList<Task> schedule = new ArrayList<>();
-    return schedule;
   }
 
   /**
