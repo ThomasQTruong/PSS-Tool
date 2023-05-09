@@ -6,7 +6,7 @@ package main;
 public class AntiTask implements Task {
   // Informational constants.
   public static final int TASK_IDENTITY = ANTI_TASK;
-  public static final String[] TASK_TYPE = {"Cancellation"};
+  public static final String[] TASK_TYPES = {"Cancellation"};
 
   // Fields.
   private String name = "";
@@ -44,6 +44,16 @@ public class AntiTask implements Task {
 
 
   // Getter methods.
+  @Override
+  public String[] getTypes() {
+    return TASK_TYPES;
+  }
+
+  @Override
+  public int getTypeLength() {
+    return TASK_TYPES.length;
+  }
+
   @Override
   public String getName() {
     return name;

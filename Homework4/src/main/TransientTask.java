@@ -6,7 +6,7 @@ package main;
 public class TransientTask implements Task {
   // Informational constants.
   public static final int TASK_IDENTITY = TRANSIENT_TASK;
-  public static final String[] TASK_TYPE = {"Visit", "Shopping", "Appointment"};
+  public static final String[] TASK_TYPES = {"Visit", "Shopping", "Appointment"};
 
   // Fields.
   private String name = "";
@@ -44,6 +44,16 @@ public class TransientTask implements Task {
 
 
   // Getter methods.
+  @Override
+  public String[] getTypes() {
+    return TASK_TYPES;
+  }
+
+  @Override
+  public int getTypeLength() {
+    return TASK_TYPES.length;
+  }
+
   @Override
   public String getName() {
     return name;

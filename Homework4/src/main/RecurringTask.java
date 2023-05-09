@@ -6,7 +6,7 @@ package main;
 public class RecurringTask implements Task {
   // Informational constants.
   public static final int TASK_IDENTITY = RECURRING_TASK;
-  public static final String[] TASK_TYPE = {"Class", "Study", "Sleep", "Exercise", "Work", "Meal"};
+  public static final String[] TASK_TYPES = {"Class", "Study", "Sleep", "Exercise", "Work", "Meal"};
 
   // Fields.
   private String name = "";
@@ -54,6 +54,16 @@ public class RecurringTask implements Task {
 
 
   // Getter methods.
+  @Override
+  public String[] getTypes() {
+    return TASK_TYPES;
+  }
+
+  @Override
+  public int getTypeLength() {
+    return TASK_TYPES.length;
+  }
+
   @Override
   public String getName() {
     return name;
