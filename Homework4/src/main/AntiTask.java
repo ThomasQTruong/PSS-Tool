@@ -4,7 +4,11 @@ package main;
  * Placeholder javadoc.
  */
 public class AntiTask implements Task {
-  public static final int TASK_TYPE = ANTI_TASK;
+  // Informational constants.
+  public static final int TASK_IDENTITY = ANTI_TASK;
+  public static final String[] TASK_TYPE = {"Cancellation"};
+
+  // Fields.
   private String name = "";
   private String type = "";
   private int startDate = 0;

@@ -4,7 +4,11 @@ package main;
  * Placeholder javadoc.
  */
 public class RecurringTask implements Task {
-  public static final int TASK_TYPE = RECURRING_TASK;
+  // Informational constants.
+  public static final int TASK_IDENTITY = RECURRING_TASK;
+  public static final String[] TASK_TYPE = {"Class", "Study", "Sleep", "Exercise", "Work", "Meal"};
+
+  // Fields.
   private String name = "";
   private String type = "";
   private int startDate = 0;
