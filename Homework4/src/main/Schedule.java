@@ -96,7 +96,7 @@ public class Schedule {
       }
     }
     for (Task taskToRemove : tasksToRemove) {
-      removeTask(taskToRemove);
+      deleteTask(taskToRemove);
     }
   }
 
@@ -110,7 +110,7 @@ public class Schedule {
       }
     }
     if (taskToDelete != null) {
-      removeTask(taskToDelete);
+      deleteTask(taskToDelete);
     } else {
       System.out.println("Task with name " + taskName + " not found.");
     }
