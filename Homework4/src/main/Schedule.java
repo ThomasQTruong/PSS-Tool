@@ -10,7 +10,9 @@ import java.util.List;
 public class Schedule {
   private ArrayList<Task> listOfTasks;
 
-  // Constructor: initalizes new schedule object.
+  /**
+   * Constructor: initalizes new schedule object.
+   */
   public Schedule() {
     listOfTasks = new ArrayList<>();
   }
