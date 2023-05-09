@@ -11,7 +11,7 @@ Main: $(wildcard ../../src/main/*.java)
 
 # Test function, creates the test files.
 Test: $(wildcard ../../src/test/*.java)
-	javac -d ../../bin/test/ $^ -cp "../../lib/*:../../bin/"
+	javac -d ../../bin/ $^ -cp "../../lib/*:../../bin/"
 
 # Cleans up every class file in bin.
 clean:
