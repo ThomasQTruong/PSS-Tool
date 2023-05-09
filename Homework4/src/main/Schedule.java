@@ -43,41 +43,43 @@ public class Schedule {
   }
 
 
-  //apply antiTask to listOfTask to remove recurring task from schedule when antiTask is entered through PSS class. --Brian Kang
+  // apply antiTask to listOfTask to remove recurring task from schedule
+  // when antiTask is entered through PSS class. --Brian Kang
   public void applyAntiTask(AntiTask antiTask) {
     List<Task> tasksToRemove = new ArrayList<>();
     for (Task task : listOfTasks) {
-        if (task instanceof RecurringTask) {
-            RecurringTask recurringTask = (RecurringTask) task;
-            //check if recurring and antiTask overlap in schedule
-            if (antiTask.getStartDate() >= recurringTask.getStartDate() &&
-                antiTask.getStartDate() <= recurringTask.getEndDate() &&
-                (antiTask.getStartDate() - recurringTask.getStartDate()) % recurringTask.getFrequency() == 0 &&
-                antiTask.getStartTime() == recurringTask.getStartTime() &&
-                antiTask.getDuration() == recurringTask.getDuration() &&
-                antiTask.getName().equals(recurringTask.getName())) {
-                tasksToRemove.add(recurringTask);
-            }
+      if (task instanceof RecurringTask) {
+        RecurringTask recurringTask = (RecurringTask) task;
+        //check if recurring and antiTask overlap in schedule
+        if (antiTask.getStartDate() >= recurringTask.getStartDate()
+            && antiTask.getStartDate() <= recurringTask.getEndDate()
+            && (antiTask.getStartDate() - recurringTask.getStartDate())
+                % recurringTask.getFrequency() == 0
+            && antiTask.getStartTime() == recurringTask.getStartTime()
+            && antiTask.getDuration() == recurringTask.getDuration()
+            && antiTask.getName().equals(recurringTask.getName())) {
+          tasksToRemove.add(recurringTask);
         }
+      }
     }
     for (Task taskToRemove : tasksToRemove) {
-        removeTask(taskToRemove);
+      removeTask(taskToRemove);
     }
-}
+  }
 
-//remove task by its name  --Brian Kang
+  // remove task by its name -- Brian Kang
   public void deleteTaskByName(String taskName) {
     Task taskToDelete = null;
     for (Task task : listOfTasks) {
-        if (task.getName().equals(taskName)) {
-            taskToDelete = task;
-            break;
-        }
-  }
+      if (task.getName().equals(taskName)) {
+        taskToDelete = task;
+        break;
+      }
+    }
     if (taskToDelete != null) {
-        removeTask(taskToDelete);
+      removeTask(taskToDelete);
     } else {
-        System.out.println("Task with name " + taskName + " not found.");
+      System.out.println("Task with name " + taskName + " not found.");
     }
   }
 
@@ -85,7 +87,7 @@ public class Schedule {
 
 
   // function for generating schedule
-  //added just spaceholder to avoid errors in PSS class -- Brian Kang
+  // added just spaceholder to avoid errors in PSS class -- Brian Kang
   public ArrayList<Task> generateSchedule() {
     ArrayList<Task> schedule = new ArrayList<>();
     return schedule;
