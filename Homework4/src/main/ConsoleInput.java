@@ -160,6 +160,7 @@ public class ConsoleInput {
     return input.next().charAt(0);
   }
 
+
   /**
    * Asks the user to input a string using a prompt.
    *
@@ -172,6 +173,60 @@ public class ConsoleInput {
 
     return stringInput.nextLine();
   }
+
+
+  /**
+   * Asks the user to input a float using a prompt.
+   *
+   * @param prompt - the prompt to use to ask the user for input.
+   * @return float - the float that the user inputted.
+   */
+  public static float getFloat(String prompt) {
+    System.out.println(prompt);
+    System.out.print("Input: ");
+
+    return input.nextFloat();
+  }
+
+
+  /**
+   * Asks the user to input an float within a range with a custom prompt.
+   * Returns an float out of the range if invalid min/max.
+   * Invalid inputs--Strings--will not cause errors.
+   *
+   * @param prompt - the String used for asking the user for input.
+   * @param min - the minimum value the float can be.
+   * @param max - the maximum value the float can be.
+   * @return float - the float within the range.
+   */
+  public static float getFloatRange(String prompt, float min, float max) {
+    // Invalid min/max; return an integer out of the range.
+    if (min >= max) {
+      return min + 1;
+    }
+
+    // The user's input.
+    float userInput;
+
+    // Prompt user.
+    System.out.println(prompt);
+
+    // Repeat the process if number isnt within the range.
+    do {
+      System.out.print("Input: ");
+      // Ask for input and loop if not an integer; if valid, skip loop.
+      while (!input.hasNextFloat()) {
+        System.out.print("Input: ");
+        // Eat up the invalid input.
+        input.nextLine();
+      }
+      // Return the correct input.
+      userInput = input.nextFloat();
+    } while (userInput < min || userInput > max);
+    
+    return userInput;
+  }
+
 
   /**
    * Closes the input scanners.
