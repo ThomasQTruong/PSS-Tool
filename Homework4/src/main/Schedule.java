@@ -43,12 +43,12 @@ public class Schedule {
   }
 
   /**
-   * Removes a task from listOfTask if it exists.
+   * Deletes a task from listOfTask if it exists.
    *
    * @param task - the task to remove.
    * @return boolean - whether the task was successfully removed or not.
    */
-  public boolean removeTask(Task task) {
+  public boolean deleteTask(Task task) {
     // Task does not exist.
     if (task == null && !listOfTasks.contains(task)) {
       return false;
@@ -100,11 +100,6 @@ public class Schedule {
     }
   }
 
-  // Thomas: Probably not neccessary since the user
-  //         would choose to delete from a given list.
-  //           - Also, what if there are multiple tasks with the same name?
-  //           - I would refrain from printing outside of PSS.java.
-  //             - It would make the code usable for other types of programs (GUI).
   // remove task by its name -- Brian Kang
   public void deleteTaskByName(String taskName) {
     Task taskToDelete = null;
