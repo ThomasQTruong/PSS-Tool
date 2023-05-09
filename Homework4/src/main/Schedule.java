@@ -10,26 +10,49 @@ import java.util.List;
 public class Schedule {
   private ArrayList<Task> listOfTasks;
 
-  // initalize new schedule class
+  // Constructor: initalizes new schedule object.
   public Schedule() {
     listOfTasks = new ArrayList<>();
   }
 
-  // function for adding task to list
-  public void addTask(Task task) {
+  /**
+   * Adds a task to listOfTasks if it is not overlapping.
+   *
+   * @param task - the task to add.
+   * @return boolean - whether the task was successfully added or not.
+   */
+  public boolean addTask(Task task) {
+    // Given task is overlapping with another task.
     if (reportOverlap(task)) {
-      System.out.println("Overlap detected. Task cannot be added.");
-      return;
+      return false;
     }
+    // Not over lapping, add task.
     listOfTasks.add(task);
+    return true;
   }
 
-  // function for removing task from list
-  public void removeTask(Task task) {
+  /**
+   * Removes a task from listOfTask if it exists.
+   *
+   * @param task - the task to remove.
+   * @return boolean - whether the task was successfully removed or not.
+   */
+  public boolean removeTask(Task task) {
+    // Task does not exist.
+    if (task == null && !listOfTasks.contains(task)) {
+      return false;
+    }
+    // Task exists, remove from listOfTasks.
     listOfTasks.remove(task);
+    return true;
   }
 
-  // function for checking overlaps of tasks
+  /**
+   * Reports whether newTask overlaps with any other tasks.
+   *
+   * @param newTask - the task to check for overlapping.
+   * @return boolean - whether newTask overlaps or not.
+   */
   private boolean reportOverlap(Task newTask) {
     for (Task task : listOfTasks) {
       if (task.getStartDate() == newTask.getStartDate()) {
@@ -42,7 +65,6 @@ public class Schedule {
     return false;  // No overlap found
   }
 
-
   // apply antiTask to listOfTask to remove recurring task from schedule
   // when antiTask is entered through PSS class. --Brian Kang
   public void applyAntiTask(AntiTask antiTask) {
@@ -50,7 +72,7 @@ public class Schedule {
     for (Task task : listOfTasks) {
       if (task instanceof RecurringTask) {
         RecurringTask recurringTask = (RecurringTask) task;
-        //check if recurring and antiTask overlap in schedule
+        // check if recurring and antiTask overlap in schedule
         if (antiTask.getStartDate() >= recurringTask.getStartDate()
             && antiTask.getStartDate() <= recurringTask.getEndDate()
             && (antiTask.getStartDate() - recurringTask.getStartDate())
