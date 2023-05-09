@@ -10,6 +10,7 @@ import java.util.Scanner;
  */
 public class ConsoleInput {
   private static Scanner input = new Scanner(System.in);
+  private static Scanner stringInput = new Scanner(System.in);
 
   /**
    * Asks the user to input an integer.
@@ -160,9 +161,23 @@ public class ConsoleInput {
   }
 
   /**
-   * Closes the input scanner.
+   * Asks the user to input a string using a prompt.
+   *
+   * @param prompt - the prompt to use to ask the user for input.
+   * @return String - the string that the user inputted.
    */
-  public static void closeScanner() {
+  public static String getString(String prompt) {
+    System.out.println(prompt);
+    System.out.print("Input: ");
+
+    return stringInput.nextLine();
+  }
+
+  /**
+   * Closes the input scanners.
+   */
+  public static void closeScanners() {
     input.close();
+    stringInput.close();
   }
 }
