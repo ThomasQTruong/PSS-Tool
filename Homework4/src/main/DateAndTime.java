@@ -6,6 +6,8 @@ import java.util.Calendar;
  * Utility class for Date and Time related methods.
  */
 public class DateAndTime {
+  public static final int[] DAYS_IN_MONTHS = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
   /**
    * Rounds the minutes in the time to the nearest 15 minutes.
    *
@@ -27,6 +29,16 @@ public class DateAndTime {
     toRound = (int) toRound + (minutes / 100.0f);
 
     return toRound;
+  }
+
+  
+  /**
+   * Get current date in YYYYMMDD format.
+   *
+   * @return int - the formatted date.
+   */
+  public static int getCurrentYYYYMMDD() {
+    return (getYear() * 10000) + (getMonth() * 100) + getDay();
   }
 
 
@@ -57,5 +69,72 @@ public class DateAndTime {
    */
   public static int getDay() {
     return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+  }
+
+
+  /**
+   * Checks if the year is a leap year.
+   *
+   * @param year - the year to check.
+   * @return boolean - whether the year is a leap year or not.
+   */
+  public static boolean isLeapYear(int year) {
+    // Divisible by 4.
+    if (year % 4 == 0) {
+      // Divisible by 100.
+      if (year % 100 == 0) {
+        // Divisible by 400, is a leap year.
+        if (year % 400 == 0) {
+          return true;
+        }
+      // Not divisible by 100, is a leap year.
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * Get the number of days in a month for a specific year.
+   *
+   * @param year - the year to check for leap.
+   * @param month - the month to get the number of days for.
+   * @return int - the number of days.
+   */
+  public static int getDaysInMonth(int year, int month) {
+    int days = DAYS_IN_MONTHS[month - 1];
+
+    // Is February and leap year; +1 day.
+    if (month == 2 && isLeapYear(year)) {
+      ++days;
+    }
+    return days;
+  }
+
+
+  /**
+   * Checks if a YYYYMMDD formatted date is valid.
+   *
+   * @param date - the formatted date to check.
+   * @return boolean - whether the date is valid or not.
+   */
+  public static boolean isValidYYYYMMDD(int date) {
+    // Extract year, month, and date.
+    int year = date / 10000;
+    int month = (date % 10000) / 100;
+    int day = date % 100;
+
+    // Check if month and day are valid.
+    if (month < 1 || month > 12) {
+      return false;
+    }
+    if (day < 1 || day > getDaysInMonth(year, month)) {
+      return false;
+    }
+    
+    // Valid month and day.
+    return true;
   }
 }
