@@ -106,7 +106,16 @@ public class PSS {
 
     int startDate = ConsoleInput.getInt("Enter the start date of the task [YYYYMMDD].");
 
+    int endDate = 0;
+    int frequency = 0;
 
+    if(taskTypeString.equals("RECURRING_TASK")) {
+      endDate = ConsoleInput.getInt("Enter the end date of the task [YYYY/MM/DD].");
+      frequency = ConsoleInput.getInt("Enter the frequency of the task in days.");
+    }
+
+     //call enterTask() and add to schedule list 
+    pss. enterTask(taskTypeString, name, startTime, duration, startDate, endDate, frequency);
 
     return true;
   }
