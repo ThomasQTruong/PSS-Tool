@@ -101,16 +101,10 @@ public class PSS {
                                                 0.25f, 23.75f);
 
     // Round times to nearest 15 minutes.
-    startTime = roundMinutesToNearest15(startTime);
-    startTime = roundMinutesToNearest15(duration);
+    startTime = DateAndTime.roundMinutesToNearest15(startTime);
+    startTime = DateAndTime.roundMinutesToNearest15(duration);
 
     int startDate = ConsoleInput.getInt("Enter the start date of the task [YYYYMMDD].");
-
-    int year = Calendar.getInstance().get(Calendar.YEAR);
-    int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-
-    System.out.println(year * 10000 + month * 100 + day);
 
     return true;
   }
@@ -170,29 +164,6 @@ public class PSS {
     System.out.println();
 
     return taskTypes[userOption];
-  }
-  
-  /**
-   * Option 1.4: Rounds the minutes in the time to the nearest 15 minutes.
-   *
-   * @param toRound - the time to round the minutes for.
-   * @return float - the rounded time.
-   */
-  public static float roundMinutesToNearest15(float toRound) {
-    // Already nearest 15 minutes.
-    if (toRound % 0.25 == 0) {
-      return toRound;
-    }
-
-    // Safer float arithmetic compared to (int) (toRound % 1 * 100).
-    int minutes = (int) (toRound * 100) - (int) (toRound) * 100;
-    // ((Round down to nearest 25)) + 25.
-    minutes = ((minutes / 25) * 25) + 25;
-    
-    // Add to toRound the minutes in float.
-    toRound = (int) toRound + (minutes / 100.0f);
-
-    return toRound;
   }
 
 
