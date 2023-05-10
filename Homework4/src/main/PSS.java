@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Placeholder javadoc.
@@ -99,9 +100,18 @@ public class PSS {
     float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
                                                 0.25f, 23.75f);
 
-    roundMinutesToNearest15(startTime);
-    // [WIP]
- 
+    // Round times to nearest 15 minutes.
+    startTime = roundMinutesToNearest15(startTime);
+    startTime = roundMinutesToNearest15(duration);
+
+    int startDate = ConsoleInput.getInt("Enter the start date of the task [YYYYMMDD].");
+
+    int year = Calendar.getInstance().get(Calendar.YEAR);
+    int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+    System.out.println(year * 10000 + month * 100 + day);
+
     return true;
   }
 
@@ -156,7 +166,7 @@ public class PSS {
     for (int i = 0; i < amountOfOptions; ++i) {
       System.out.printf("[%d] %s\n", i + 1, taskTypes[i]);
     }
-    int userOption = ConsoleInput.getIntRange("Please choose a task type.", 1, amountOfOptions);
+    int userOption = ConsoleInput.getIntRange("Please choose a task type.", 0, amountOfOptions);
     System.out.println();
 
     return taskTypes[userOption];
@@ -275,7 +285,7 @@ public class PSS {
     schedule.deleteTaskByName(taskName);
   }
 
-  
+
   // get schedule from Schedule class -- Brian Kang
  // public ArrayList<Task> getSchedule() {
  //   return schedule.getTasks();
