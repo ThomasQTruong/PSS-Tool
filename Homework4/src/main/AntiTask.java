@@ -45,6 +45,11 @@ public class AntiTask implements Task {
 
   // Getter methods.
   @Override
+  public int getIdentity() {
+    return TASK_IDENTITY;
+  }
+
+  @Override
   public String[] getTypes() {
     return TASK_TYPES;
   }

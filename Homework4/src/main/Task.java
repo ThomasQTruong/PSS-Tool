@@ -23,6 +23,8 @@ public interface Task {
 
 
   // Common getter methods.
+  public int getIdentity();
+
   public String[] getTypes();
 
   public int getTypeLength();
