@@ -133,6 +133,38 @@ public class ConsoleInput {
 
 
   /**
+   * Asks the user to input an integer above a minimum with a custom prompt.
+   * Invalid inputs--Strings and doubles--will not cause errors.
+   *
+   * @param prompt - the String used for asking the user for input.
+   * @param min - the minimum value the int can be.
+   * @return int - the int above the minimum value.
+   */
+  public static int getIntMin(String prompt, int min) {
+    // The user's input.
+    int userInput;
+
+    // Prompt user.
+    System.out.println(prompt);
+
+    // Repeat the process if number isnt within the range.
+    do {
+      System.out.print("Input: ");
+      // Ask for input and loop if not an integer; if valid, skip loop.
+      while (!input.hasNextInt()) {
+        System.out.print("Input: ");
+        // Eat up the invalid input.
+        input.nextLine();
+      }
+      // Return the correct input.
+      userInput = input.nextInt();
+    } while (userInput < min);
+    
+    return userInput;
+  }
+
+
+  /**
    * Asks the user to input a character.
    *
    * @return char - the character that the user inputted.
