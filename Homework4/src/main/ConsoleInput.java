@@ -182,9 +182,16 @@ public class ConsoleInput {
    * @return float - the float that the user inputted.
    */
   public static float getFloat(String prompt) {
+    // Prompt user.
     System.out.println(prompt);
     System.out.print("Input: ");
-
+    // Ask for input and loop if not an float; if valid, skip loop.
+    while (!input.hasNextFloat()) {
+      System.out.print("Input: ");
+      // Eat up the invalid input.
+      input.nextLine();
+    }
+    // Return the correct input.
     return input.nextFloat();
   }
 
