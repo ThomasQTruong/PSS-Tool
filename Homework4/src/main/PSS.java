@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class PSS {
   private Schedule schedule;
 
+
   public static void main(String[] args) {
     int userInput;
 
@@ -58,6 +59,7 @@ public class PSS {
     ConsoleInput.closeScanners();
   }
 
+
   /**
    * Prints the operations menu.
    */
@@ -74,6 +76,7 @@ public class PSS {
     System.out.println("[9] View or write the schedule for one month");
     System.out.println("[0] Exit Program");
   }
+
 
   /**
    * Option 1.1: creates the task.
@@ -158,7 +161,13 @@ public class PSS {
 
     return taskTypes[userOption];
   }
-
+  
+  /**
+   * Option 1.4: Rounds the minutes in the time to the nearest 15 minutes.
+   *
+   * @param toRound - the time to round the minutes for.
+   * @return float - the rounded time.
+   */
   public static float roundMinutesToNearest15(float toRound) {
     // Already nearest 15 minutes.
     if (toRound % 0.25 == 0) {
@@ -170,56 +179,60 @@ public class PSS {
     // ((Round down to nearest 25)) + 25.
     minutes = ((minutes / 25) * 25) + 25;
     
-    // Add to toRound.
+    // Add to toRound the minutes in float.
     toRound = (int) toRound + (minutes / 100.0f);
-
-    System.out.println(minutes);
-    System.out.println(toRound);
-
-    // [WIP]
 
     return toRound;
   }
+
 
   // Option 2.
   private static boolean viewTask() {
     return true;
   }
 
+
   // Option 3.
   private static boolean deleteTask() {
     return true;
   }
+
 
   // Option 4.
   private static boolean editTask() {
     return true;
   }
 
+
   // Option 5.
   private static boolean saveToFile() {
     return true;
   }
+
 
   // Option 6.
   private static boolean loadFromFile() {
     return true;
   }
 
+
   // Option 7 (???).
   private static boolean viewOrWriteForOneDay() {
     return true;
   }
+
 
   // Option 8 (???).
   private static boolean viewOrWriteForOneWeek() {
     return true;
   }
 
+
   // Option 9 (???).
   private static boolean viewOrWriteForOneMonth() {
     return true;
   }
+
 
   // assuming the user is given option to input recurring,
   // transient tasks, and anti task -- Brian Kang
@@ -255,12 +268,14 @@ public class PSS {
     this.schedule.addTask(newTask);
   }
 
+
   // user given option to delete task by name --Brian Kang
   public void deleteTask(String taskName) {
     //call the deleteTaskByName method of the Schedule object
     schedule.deleteTaskByName(taskName);
   }
 
+  
   // get schedule from Schedule class -- Brian Kang
   public ArrayList<Task> getSchedule() {
     return schedule.getTasks();
