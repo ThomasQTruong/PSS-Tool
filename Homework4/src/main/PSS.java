@@ -277,7 +277,7 @@ public class PSS {
 
   
   // get schedule from Schedule class -- Brian Kang
-  public ArrayList<Task> getSchedule() {
-    return schedule.getTasks();
-  }
+ // public ArrayList<Task> getSchedule() {
+ //   return schedule.getTasks();
+ // }
 }
