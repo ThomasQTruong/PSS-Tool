@@ -1,7 +1,5 @@
 package main;
 
-import java.sql.Date;
-
 /**
  * Placeholder javadoc.
  */
@@ -9,6 +7,11 @@ public class PSS {
   private static Schedule schedule = new Schedule();
 
 
+  /**
+   * The main PSS program.
+   *
+   * @param args - commandline arguments.
+   */
   public static void main(String[] args) {
     int userInput;
     
@@ -26,10 +29,17 @@ public class PSS {
           break;
         case 1:
           // Create a task.
-          createTask();
+          if (!createTask()) {  // Failed to create.
+            System.out.println();
+            System.out.println("[!!!] Failed to create task: name exists or time conflict.");
+          }
+          System.out.println();
           break;
         case 2:
           // View a task.
+          for (Task task : schedule.getTasks()) {
+            System.out.printf("%s | %d | %f | %f\n", task.getName(), task.getStartDate(), task.getStartTime(), task.getDuration());
+          }
           break;
         case 3:
           // Delete a task.
@@ -80,8 +90,10 @@ public class PSS {
 
   /**
    * Option 1.1: Obtains information and creates the task.
+   *
+   * @return boolean - whether the task was successfully created or not.
    */
-  private static void createTask() {
+  private static boolean createTask() {
     
     int taskIdentity = getTaskIdentity();
 
@@ -121,10 +133,10 @@ public class PSS {
       frequency = ConsoleInput.getIntRange("Enter the frequency of the task in days [1 - 7].",
                                            1, 7);
     }
-    System.out.println();
 
     // call enterTask() and add to schedule list 
-    enterTask(taskIdentity, name, taskType, startTime, duration, startDate, endDate, frequency);
+    return enterTask(taskIdentity, name, taskType, startTime,
+                     duration, startDate, endDate, frequency);
   }
 
   /**
@@ -137,8 +149,7 @@ public class PSS {
     System.out.println("[1] Recurring Task");
     System.out.println("[2] Transient Task");
     System.out.println("[3] Anti-Task");
-    System.out.println("[0] Cancel");
-    int taskIdentity = ConsoleInput.getIntRange("Please choose a task identity.", 0, 3);
+    int taskIdentity = ConsoleInput.getIntRange("Please choose a task identity.", 1, 3);
     System.out.println();
 
     return taskIdentity;
@@ -195,9 +206,10 @@ public class PSS {
    * @param startDate - the start date of the task.
    * @param endDate - the end date if it is a RECURRING task.
    * @param frequency - the frequency if it is a RECURRING task.
+   * @return boolean - whether the task was entered successfully.
    */
-  public static void enterTask(int taskIdentity, String name, String taskType, float startTime,
-                               float duration, int startDate, int endDate, int frequency) {
+  public static boolean enterTask(int taskIdentity, String name, String taskType, float startTime,
+                                  float duration, int startDate, int endDate, int frequency) {
     // use int taskIdentity to sort which task
     Task newTask;
     switch (taskIdentity) {
@@ -218,17 +230,17 @@ public class PSS {
         antiTask.setDuration(duration);
         antiTask.setStartDate(startDate);
         schedule.applyAntiTask(antiTask);
-        return;
+        return true;
       default:
         System.out.println("Invalid task identity.");
-        return;
+        return false;
     }
     newTask.setName(name);
     newTask.setType(taskType);
     newTask.setStartTime(startTime);
     newTask.setDuration(duration);
     newTask.setStartDate(startDate);
-    schedule.addTask(newTask);
+    return schedule.addTask(newTask);
   }
 
 
