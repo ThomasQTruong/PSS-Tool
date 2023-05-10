@@ -1,17 +1,14 @@
 package main;
 
-import java.util.ArrayList;
-
 /**
  * Placeholder javadoc.
  */
 public class PSS {
-  private Schedule schedule;
+  private static Schedule schedule;
 
 
   public static void main(String[] args) {
     int userInput;
-    
     
     do {
       // Print and get user's operation choice.
@@ -87,9 +84,6 @@ public class PSS {
   private static boolean createTask() {
     
     int taskIdentity = getTaskIdentity();
-    
-    PSS pss = new PSS();
-  
 
     // Obtain common task values.
     System.out.println("=Task Setup=");
@@ -104,20 +98,18 @@ public class PSS {
     float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
                                                 0.25f, 23.75f);
 
-
-
     int startDate = ConsoleInput.getInt("Enter the start date of the task [YYYYMMDD].");
 
     int endDate = 0;
     int frequency = 0;
 
-    if(taskIdentity == Task.RECURRING_TASK) {
+    if (taskIdentity == Task.RECURRING_TASK) {
       endDate = ConsoleInput.getInt("Enter the end date of the task [YYYY/MM/DD].");
       frequency = ConsoleInput.getInt("Enter the frequency of the task in days.");
     }
 
-     //call enterTask() and add to schedule list 
-    pss.enterTask(taskIdentity, name, startTime, duration, startDate, endDate, frequency);
+    // call enterTask() and add to schedule list 
+    enterTask(taskIdentity, name, startTime, duration, startDate, endDate, frequency);
 
     return true;
   }
@@ -230,9 +222,9 @@ public class PSS {
 
   // assuming the user is given option to input recurring,
   // transient tasks, and anti task -- Brian Kang
-  public void enterTask(int taskIdentity, String name, float startTime, float duration, 
-                      int startDate, int endDate, int frequency) {
-    //use int taskIdentity to sort which task
+  public static void enterTask(int taskIdentity, String name, float startTime, float duration, 
+                               int startDate, int endDate, int frequency) {
+    // use int taskIdentity to sort which task
     Task newTask;
     switch (taskIdentity) {
       case Task.RECURRING_TASK:
@@ -260,19 +252,19 @@ public class PSS {
     newTask.setStartTime(startTime);
     newTask.setDuration(duration);
     newTask.setStartDate(startDate);
-    this.schedule.addTask(newTask);
+    schedule.addTask(newTask);
   }
 
 
   // user given option to delete task by name --Brian Kang
   public void deleteTask(String taskName) {
-    //call the deleteTaskByName method of the Schedule object
+    // call the deleteTaskByName method of the Schedule object
     schedule.deleteTaskByName(taskName);
   }
 
   
   // get schedule from Schedule class -- Brian Kang
- // public ArrayList<Task> getSchedule() {
- //   return schedule.getTasks();
- // }
+  // public ArrayList<Task> getSchedule() {
+  //   return schedule.getTasks();
+  // }
 }
