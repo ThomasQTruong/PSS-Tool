@@ -1,7 +1,6 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Placeholder javadoc.
@@ -12,7 +11,8 @@ public class PSS {
 
   public static void main(String[] args) {
     int userInput;
-
+    
+    
     do {
       // Print and get user's operation choice.
       printMenu();
@@ -85,14 +85,16 @@ public class PSS {
    * @return boolean - whether the task was successfully created or not.
    */
   private static boolean createTask() {
+    PSS pss = new PSS();
     int taskIdentity = getTaskIdentity();
+    
 
     // Obtain common task values.
     System.out.println("=Task Setup=");
     String name = ConsoleInput.getString("Enter a name for the task.");
     System.out.println();
 
-    String taskType = getTaskType(taskIdentity);
+    String taskTypeString = getTaskType(taskIdentity);
 
     float startTime = ConsoleInput.getFloatRange("Enter the starting time of task [0 - 23.75].",
                                              0.0f, 23.75f);
@@ -100,18 +102,24 @@ public class PSS {
     float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
                                                 0.25f, 23.75f);
 
-    // Round times to nearest 15 minutes.
+    //round time to nearest 15 min
     startTime = roundMinutesToNearest15(startTime);
     startTime = roundMinutesToNearest15(duration);
 
     int startDate = ConsoleInput.getInt("Enter the start date of the task [YYYYMMDD].");
 
-    int year = Calendar.getInstance().get(Calendar.YEAR);
-    int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+    int endDate = 0;
+    int frequency = 0;
 
-    System.out.println(year * 10000 + month * 100 + day);
-
+    if(taskTypeString.equals("RECURRING_TASK")) {
+      endDate = ConsoleInput.getInt("Enter the end date of the task [YYYY/MM/DD].");
+      frequency = ConsoleInput.getInt("Enter the frequency of the task in days.");
+    }
+    
+    //call enterTask() and add to schedule list 
+    pss.enterTask(taskTypeString, name, startTime, duration, startDate, endDate, frequency);
+    
+ 
     return true;
   }
 
@@ -166,7 +174,7 @@ public class PSS {
     for (int i = 0; i < amountOfOptions; ++i) {
       System.out.printf("[%d] %s\n", i + 1, taskTypes[i]);
     }
-    int userOption = ConsoleInput.getIntRange("Please choose a task type.", 0, amountOfOptions);
+    int userOption = ConsoleInput.getIntRange("Please choose a task type.", 1, amountOfOptions);
     System.out.println();
 
     return taskTypes[userOption];
@@ -246,8 +254,26 @@ public class PSS {
 
   // assuming the user is given option to input recurring,
   // transient tasks, and anti task -- Brian Kang
-  public void enterTask(int taskType, String name, float startTime, float duration, 
+  public void enterTask(String taskTypeString, String name, float startTime, float duration, 
                       int startDate, int endDate, int frequency) {
+    //convert taskType string to int
+    int taskType;
+    switch(taskTypeString){
+        case "TRANSIENT_TASK":
+            taskType = Task.TRANSIENT_TASK;
+            break;
+        case "RECURRING_TASK":
+            taskType = Task.RECURRING_TASK;
+            break;
+        case "ANTI_TASK":
+            taskType = Task.ANTI_TASK;
+            break;
+        default:
+            System.out.println("Invalid task type.");
+            return;
+
+    }
+    //use int taskType to sort which task
     Task newTask;
     switch (taskType) {
       case Task.RECURRING_TASK:
@@ -285,7 +311,7 @@ public class PSS {
     schedule.deleteTaskByName(taskName);
   }
 
-
+  
   // get schedule from Schedule class -- Brian Kang
  // public ArrayList<Task> getSchedule() {
  //   return schedule.getTasks();
