@@ -1,5 +1,7 @@
 package main;
 
+import java.sql.Date;
+
 /**
  * Placeholder javadoc.
  */
@@ -98,17 +100,31 @@ public class PSS {
     float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
                                                 0.25f, 23.75f);
 
-    int startDate = ConsoleInput.getInt("Enter the start date of the task [YYYYMMDD].");
+    int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
+                                         DateAndTime.getCurrentYYYYMMDD());
+    // Invalid startDate, keep asking for a valid one.
+    while (!DateAndTime.isValidYYYYMMDD(startDate)) {
+      startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
+                                         DateAndTime.getCurrentYYYYMMDD());
+    }
 
+    // Is a recurring task, ask for 2 more properties.
     int endDate = 0;
     int frequency = 0;
     if (taskIdentity == Task.RECURRING_TASK) {
-      endDate = ConsoleInput.getInt("Enter the end date of the task [YYYY/MM/DD].");
-      frequency = ConsoleInput.getInt("Enter the frequency of the task in days.");
+      endDate = ConsoleInput.getIntMin("Enter the end date of the task [YYYYMMDD].",
+                                       startDate + 1);
+      // Invalid endDate, keep asking for a valid one.
+      while (!DateAndTime.isValidYYYYMMDD(endDate)) {
+        endDate = ConsoleInput.getIntMin("Invalid end date. Try again.",
+                                         startDate + 1);
+      }
+
+      frequency = ConsoleInput.getIntRange("Enter the frequency of the task in days.", 1, 7);
     }
 
     // call enterTask() and add to schedule list 
-    enterTask(taskIdentity, name, taskType, startTime, duration, startDate, endDate, frequency);
+    // enterTask(taskIdentity, name, taskType, startTime, duration, startDate, endDate, frequency);
 
     return true;
   }
