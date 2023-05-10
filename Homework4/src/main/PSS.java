@@ -102,24 +102,12 @@ public class PSS {
     float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
                                                 0.25f, 23.75f);
 
-    //round time to nearest 15 min
-    startTime = roundMinutesToNearest15(startTime);
-    startTime = roundMinutesToNearest15(duration);
+
 
     int startDate = ConsoleInput.getInt("Enter the start date of the task [YYYYMMDD].");
 
-    int endDate = 0;
-    int frequency = 0;
 
-    if(taskTypeString.equals("RECURRING_TASK")) {
-      endDate = ConsoleInput.getInt("Enter the end date of the task [YYYY/MM/DD].");
-      frequency = ConsoleInput.getInt("Enter the frequency of the task in days.");
-    }
-    
-    //call enterTask() and add to schedule list 
-    pss.enterTask(taskTypeString, name, startTime, duration, startDate, endDate, frequency);
-    
- 
+
     return true;
   }
 
@@ -178,29 +166,6 @@ public class PSS {
     System.out.println();
 
     return taskTypes[userOption];
-  }
-  
-  /**
-   * Option 1.4: Rounds the minutes in the time to the nearest 15 minutes.
-   *
-   * @param toRound - the time to round the minutes for.
-   * @return float - the rounded time.
-   */
-  public static float roundMinutesToNearest15(float toRound) {
-    // Already nearest 15 minutes.
-    if (toRound % 0.25 == 0) {
-      return toRound;
-    }
-
-    // Safer float arithmetic compared to (int) (toRound % 1 * 100).
-    int minutes = (int) (toRound * 100) - (int) (toRound) * 100;
-    // ((Round down to nearest 25)) + 25.
-    minutes = ((minutes / 25) * 25) + 25;
-    
-    // Add to toRound the minutes in float.
-    toRound = (int) toRound + (minutes / 100.0f);
-
-    return toRound;
   }
 
 
