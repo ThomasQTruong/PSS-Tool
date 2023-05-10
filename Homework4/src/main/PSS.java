@@ -85,16 +85,18 @@ public class PSS {
    * @return boolean - whether the task was successfully created or not.
    */
   private static boolean createTask() {
-    PSS pss = new PSS();
+    
     int taskIdentity = getTaskIdentity();
     
+    PSS pss = new PSS();
+  
 
     // Obtain common task values.
     System.out.println("=Task Setup=");
     String name = ConsoleInput.getString("Enter a name for the task.");
     System.out.println();
 
-    String taskTypeString = getTaskType(taskIdentity);
+    String taskType = getTaskType(taskIdentity);
 
     float startTime = ConsoleInput.getFloatRange("Enter the starting time of task [0 - 23.75].",
                                              0.0f, 23.75f);
@@ -109,13 +111,13 @@ public class PSS {
     int endDate = 0;
     int frequency = 0;
 
-    if(taskTypeString.equals("RECURRING_TASK")) {
+    if(taskIdentity == Task.RECURRING_TASK) {
       endDate = ConsoleInput.getInt("Enter the end date of the task [YYYY/MM/DD].");
       frequency = ConsoleInput.getInt("Enter the frequency of the task in days.");
     }
 
      //call enterTask() and add to schedule list 
-    pss. enterTask(taskTypeString, name, startTime, duration, startDate, endDate, frequency);
+    pss.enterTask(taskIdentity, name, startTime, duration, startDate, endDate, frequency);
 
     return true;
   }
@@ -228,28 +230,11 @@ public class PSS {
 
   // assuming the user is given option to input recurring,
   // transient tasks, and anti task -- Brian Kang
-  public void enterTask(String taskTypeString, String name, float startTime, float duration, 
+  public void enterTask(int taskIdentity, String name, float startTime, float duration, 
                       int startDate, int endDate, int frequency) {
-    //convert taskType string to int
-    int taskType;
-    switch(taskTypeString){
-        case "TRANSIENT_TASK":
-            taskType = Task.TRANSIENT_TASK;
-            break;
-        case "RECURRING_TASK":
-            taskType = Task.RECURRING_TASK;
-            break;
-        case "ANTI_TASK":
-            taskType = Task.ANTI_TASK;
-            break;
-        default:
-            System.out.println("Invalid task type.");
-            return;
-
-    }
-    //use int taskType to sort which task
+    //use int taskIdentity to sort which task
     Task newTask;
-    switch (taskType) {
+    switch (taskIdentity) {
       case Task.RECURRING_TASK:
         RecurringTask recurringTask = new RecurringTask();
         recurringTask.setEndDate(endDate);
@@ -268,7 +253,7 @@ public class PSS {
         schedule.applyAntiTask(antiTask);
         return;
       default:
-        System.out.println("Invalid task type.");
+        System.out.println("Invalid task identity.");
         return;
     }
     newTask.setName(name);

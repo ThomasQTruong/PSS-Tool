@@ -101,7 +101,7 @@ public class Schedule {
   }
 
   // remove task by its name -- Brian Kang
-  public void deleteTaskByName(String taskName) {
+  public boolean deleteTaskByName(String taskName) {
     Task taskToDelete = null;
     for (Task task : listOfTasks) {
       if (task.getName().equals(taskName)) {
@@ -111,8 +111,9 @@ public class Schedule {
     }
     if (taskToDelete != null) {
       deleteTask(taskToDelete);
+      return true;
     } else {
-      System.out.println("Task with name " + taskName + " not found.");
+      return false;
     }
   }
 
