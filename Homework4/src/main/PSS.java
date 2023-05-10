@@ -6,7 +6,7 @@ import java.sql.Date;
  * Placeholder javadoc.
  */
 public class PSS {
-  private static Schedule schedule;
+  private static Schedule schedule = new Schedule();
 
 
   public static void main(String[] args) {
@@ -79,11 +79,9 @@ public class PSS {
 
 
   /**
-   * Option 1.1: creates the task.
-   *
-   * @return boolean - whether the task was successfully created or not.
+   * Option 1.1: Obtains information and creates the task.
    */
-  private static boolean createTask() {
+  private static void createTask() {
     
     int taskIdentity = getTaskIdentity();
 
@@ -120,13 +118,13 @@ public class PSS {
                                          startDate + 1);
       }
 
-      frequency = ConsoleInput.getIntRange("Enter the frequency of the task in days.", 1, 7);
+      frequency = ConsoleInput.getIntRange("Enter the frequency of the task in days [1 - 7].",
+                                           1, 7);
     }
+    System.out.println();
 
     // call enterTask() and add to schedule list 
-    // enterTask(taskIdentity, name, taskType, startTime, duration, startDate, endDate, frequency);
-
-    return true;
+    enterTask(taskIdentity, name, taskType, startTime, duration, startDate, endDate, frequency);
   }
 
   /**
@@ -186,6 +184,53 @@ public class PSS {
     return taskTypes[userOption];
   }
 
+  /**
+   * Option 1.4: Creates a task with the given information and inserts into the schedule.
+   *
+   * @param taskIdentity - the task identifier (recurring, transient, anti).
+   * @param name - the name of the task.
+   * @param taskType - the type of the task.
+   * @param startTime - the start time of the task.
+   * @param duration - the duration of the task.
+   * @param startDate - the start date of the task.
+   * @param endDate - the end date if it is a RECURRING task.
+   * @param frequency - the frequency if it is a RECURRING task.
+   */
+  public static void enterTask(int taskIdentity, String name, String taskType, float startTime,
+                               float duration, int startDate, int endDate, int frequency) {
+    // use int taskIdentity to sort which task
+    Task newTask;
+    switch (taskIdentity) {
+      case Task.RECURRING_TASK:
+        RecurringTask recurringTask = new RecurringTask();
+        recurringTask.setEndDate(endDate);
+        recurringTask.setFrequency(frequency);
+        newTask = recurringTask;
+        break;
+      case Task.TRANSIENT_TASK:
+        newTask = new TransientTask();
+        break;
+      case Task.ANTI_TASK:
+        AntiTask antiTask = new AntiTask();
+        antiTask.setName(name);
+        antiTask.setType(taskType);
+        antiTask.setStartTime(startTime);
+        antiTask.setDuration(duration);
+        antiTask.setStartDate(startDate);
+        schedule.applyAntiTask(antiTask);
+        return;
+      default:
+        System.out.println("Invalid task identity.");
+        return;
+    }
+    newTask.setName(name);
+    newTask.setType(taskType);
+    newTask.setStartTime(startTime);
+    newTask.setDuration(duration);
+    newTask.setStartDate(startDate);
+    schedule.addTask(newTask);
+  }
+
 
   // Option 2.
   private static boolean viewTask() {
@@ -232,44 +277,6 @@ public class PSS {
   // Option 9 (???).
   private static boolean viewOrWriteForOneMonth() {
     return true;
-  }
-
-
-  // assuming the user is given option to input recurring,
-  // transient tasks, and anti task -- Brian Kang
-  public static void enterTask(int taskIdentity, String name, String taskType, float startTime,
-                               float duration, int startDate, int endDate, int frequency) {
-    // use int taskIdentity to sort which task
-    Task newTask;
-    switch (taskIdentity) {
-      case Task.RECURRING_TASK:
-        RecurringTask recurringTask = new RecurringTask();
-        recurringTask.setEndDate(endDate);
-        recurringTask.setFrequency(frequency);
-        newTask = recurringTask;
-        break;
-      case Task.TRANSIENT_TASK:
-        newTask = new TransientTask();
-        break;
-      case Task.ANTI_TASK:
-        AntiTask antiTask = new AntiTask();
-        antiTask.setName(name);
-        antiTask.setType(taskType);
-        antiTask.setStartTime(startTime);
-        antiTask.setDuration(duration);
-        antiTask.setStartDate(startDate);
-        schedule.applyAntiTask(antiTask);
-        return;
-      default:
-        System.out.println("Invalid task identity.");
-        return;
-    }
-    newTask.setName(name);
-    newTask.setType(taskType);
-    newTask.setStartTime(startTime);
-    newTask.setDuration(duration);
-    newTask.setStartDate(startDate);
-    schedule.addTask(newTask);
   }
 
 
