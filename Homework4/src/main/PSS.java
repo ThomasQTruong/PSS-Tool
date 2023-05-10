@@ -102,14 +102,13 @@ public class PSS {
 
     int endDate = 0;
     int frequency = 0;
-
     if (taskIdentity == Task.RECURRING_TASK) {
       endDate = ConsoleInput.getInt("Enter the end date of the task [YYYY/MM/DD].");
       frequency = ConsoleInput.getInt("Enter the frequency of the task in days.");
     }
 
     // call enterTask() and add to schedule list 
-    enterTask(taskIdentity, name, startTime, duration, startDate, endDate, frequency);
+    enterTask(taskIdentity, name, taskType, startTime, duration, startDate, endDate, frequency);
 
     return true;
   }
@@ -222,8 +221,8 @@ public class PSS {
 
   // assuming the user is given option to input recurring,
   // transient tasks, and anti task -- Brian Kang
-  public static void enterTask(int taskIdentity, String name, float startTime, float duration, 
-                               int startDate, int endDate, int frequency) {
+  public static void enterTask(int taskIdentity, String name, String taskType, float startTime,
+                               float duration, int startDate, int endDate, int frequency) {
     // use int taskIdentity to sort which task
     Task newTask;
     switch (taskIdentity) {
@@ -239,6 +238,7 @@ public class PSS {
       case Task.ANTI_TASK:
         AntiTask antiTask = new AntiTask();
         antiTask.setName(name);
+        antiTask.setType(taskType);
         antiTask.setStartTime(startTime);
         antiTask.setDuration(duration);
         antiTask.setStartDate(startDate);
@@ -249,6 +249,7 @@ public class PSS {
         return;
     }
     newTask.setName(name);
+    newTask.setType(taskType);
     newTask.setStartTime(startTime);
     newTask.setDuration(duration);
     newTask.setStartDate(startDate);
