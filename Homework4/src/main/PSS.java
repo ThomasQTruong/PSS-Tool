@@ -250,10 +250,16 @@ public class PSS {
   }
 
 
-  // Option 3.
+  /* Option 3.
+  *
+  * deletes task by asking for name of the task
+  *
+  */
   private static boolean deleteTask() {
-    return true;
+    String taskToDelete = ConsoleInput.getString("Enter the name of the task to delete.");
+    return schedule.deleteTaskByName(taskToDelete);
   }
+
 
 
   // Option 4.
@@ -293,10 +299,10 @@ public class PSS {
 
 
   // user given option to delete task by name --Brian Kang
-  public void deleteTask(String taskName) {
+  //public void deleteTask(String taskName) {
     // call the deleteTaskByName method of the Schedule object
-    schedule.deleteTaskByName(taskName);
-  }
+  //  schedule.deleteTaskByName(taskName);
+  //}
 
   
   // get schedule from Schedule class -- Brian Kang
