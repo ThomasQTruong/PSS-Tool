@@ -262,8 +262,57 @@ public class PSS {
 
 
 
-  // Option 4.
+  /* Option 4.
+  * Asks for task to edit
+  * Asks for what attribute you want to edit
+  * NOT DONE
+  */ 
   private static boolean editTask() {
+    String taskToEdit = ConsoleInput.getString("Enter the name of the task you want to edit.");
+    boolean realTask = false;
+
+    Task editingTask = null;
+    for (Task theTask : schedule.getTasks()) {
+      if (theTask.getName().equals(taskToEdit)) {
+        editingTask = theTask;
+        realTask = true;
+        break;
+      }
+    }
+
+    if(realTask == true) {
+       //if it is an anti task then you can edit 1 more field
+       //if it is a recurring task then you gotta choose which date to edit
+       // or should it be it edits all of em?
+       // idk how to tell if its transient, recurring, or anti
+      if(editingTask.TASK_IDENTITY == 1) {
+
+      }
+
+      System.out.println("attribute to edit:");
+      System.out.println("[1] Name");
+      System.out.println("[2] Duration");
+      System.out.println("[3] Start Date");
+      System.out.println("[4] Start Time");
+      int thingToEdit  = ConsoleInput.getIntRange("Enter what you want to edit", 1, 4);
+
+      if(thingToEdit == 1) {
+        String newTaskName = ConsoleInput.getString("Enter the new name of the task");
+        editingTask.setName(newTaskName);
+      } else if(thingToEdit == 2) {
+        float newDuration = ConsoleInput.getFloat("Enter the new duration of the task");
+        editingTask.setDuration(newDuration);
+      } else if(thingToEdit == 3) {
+        int newStartDate= ConsoleInput.getInt("Enter the new start date of the task");
+        editingTask.setStartDate(newStartDate);
+      } else if(thingToEdit == 4) {
+        float newStartTime = ConsoleInput.getFloat("Enter the new duration of the task");
+        editingTask.setStartTime(newStartTime);
+      }
+
+    }
+
+
     return true;
   }
 
