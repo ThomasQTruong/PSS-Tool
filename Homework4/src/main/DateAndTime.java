@@ -127,7 +127,7 @@ public class DateAndTime {
     int day = date % 100;
 
     // Check if year, month, and day are valid.
-    if (year < 0 && year > 9999) {
+    if (year > 9999) {
       return false;
     }
     if (month < 1 || month > 12) {
