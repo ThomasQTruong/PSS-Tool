@@ -94,6 +94,10 @@ public class TransientTask implements Task {
     if (this == otherTask) {
       return false;
     }
+    // Other task is an anti-task, allowed to overlap.
+    if (otherTask.getIdentity() == Task.ANTI_TASK) {
+      return false;
+    }
 
     // Other task is a recurring task; check if theres a matching date.
     if (otherTask.getIdentity() == Task.RECURRING_TASK) {
