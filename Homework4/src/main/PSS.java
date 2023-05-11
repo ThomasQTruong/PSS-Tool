@@ -117,11 +117,11 @@ public class PSS {
                                                 0.25f, 23.75f);
 
     int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
-                                         DateAndTime.getCurrentYYYYMMDD());
+                                       10000000);
     // Invalid startDate, keep asking for a valid one.
     while (!DateAndTime.isValidYYYYMMDD(startDate)) {
       startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
-                                         DateAndTime.getCurrentYYYYMMDD());
+                                         10000000);
     }
 
     // Is a recurring task, ask for 2 more properties.
@@ -136,7 +136,7 @@ public class PSS {
                                          startDate + 1);
       }
 
-      while (frequency != 1 || frequency != 7) {
+      while (frequency != 1 && frequency != 7) {
         frequency = ConsoleInput.getInt("Enter the task frequency [1 (daily) | 7 (weekly)].");
       }
     }
@@ -220,9 +220,9 @@ public class PSS {
     // Create task based on identity.
     Task newTask;
     if (taskIdentity == Task.RECURRING_TASK) {
-      newTask = new TransientTask();
-    } else if (taskIdentity == Task.TRANSIENT_TASK) {
       newTask = new RecurringTask();
+    } else if (taskIdentity == Task.TRANSIENT_TASK) {
+      newTask = new TransientTask();
     } else {
       newTask = new AntiTask();
     }
@@ -363,11 +363,11 @@ public class PSS {
     } else if (userOption == 5) {
       // 5: Edit start date.
       int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
-                                         DateAndTime.getCurrentYYYYMMDD());
+                                         10000000);
       // Invalid startDate, keep asking for a valid one.
       while (!DateAndTime.isValidYYYYMMDD(startDate)) {
         startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
-                                          DateAndTime.getCurrentYYYYMMDD());
+                                       10000000);
       }
       // Save old start date incase overlap issue.
       int oldDate = taskToEdit.getStartDate();
@@ -401,7 +401,7 @@ public class PSS {
       }
     } else if (userOption == 7) {
       int frequency = 0;
-      while (frequency != 1 || frequency != 7) {
+      while (frequency != 1 && frequency != 7) {
         frequency = ConsoleInput.getInt("Enter the task frequency [1 (daily) | 7 (weekly)].");
       }
       // Get old frequency incase overlap.
