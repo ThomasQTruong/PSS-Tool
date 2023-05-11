@@ -9,6 +9,7 @@ public class AntiTask implements Task {
   public static final String[] TASK_TYPES = {"Cancellation"};
 
   // Fields.
+  private RecurringTask recurringTask = null;
   private String name = "";
   private String type = "";
   private int startDate = 0;
@@ -40,6 +41,15 @@ public class AntiTask implements Task {
   @Override
   public void setStartDate(int startDate) {
     this.startDate = startDate;
+  }
+
+  /**
+   * Sets the recurringTask to a new one.
+   *
+   * @param recurringTask - the new Recurring Task.
+   */
+  public void setRecurringTask(RecurringTask recurringTask) {
+    this.recurringTask = recurringTask;
   }
 
 
@@ -82,6 +92,15 @@ public class AntiTask implements Task {
   @Override
   public int getStartDate() {
     return startDate;
+  }
+
+  /**
+   * Retrieves the recurringTask.
+   *
+   * @return recurringTask - the Recurring Task.
+   */
+  public RecurringTask getRecurringTask() {
+    return recurringTask;
   }
 
 

@@ -11,6 +11,7 @@ public class RecurringTask implements Task {
   public static final String[] TASK_TYPES = {"Class", "Study", "Sleep", "Exercise", "Work", "Meal"};
 
   // Fields.
+  private AntiTask antiTask = null;
   private String name = "";
   private String type = "";
   private int startDate = 0;
@@ -62,6 +63,15 @@ public class RecurringTask implements Task {
    */
   public void setFrequency(int frequency) {
     this.frequency = frequency;
+  }
+
+  /**
+   * Sets the antiTask to a new one.
+   *
+   * @param antiTask - the new Anti-Task.
+   */
+  public void setAntiTask(AntiTask antiTask) {
+    this.antiTask = antiTask;
   }
 
 
@@ -125,11 +135,42 @@ public class RecurringTask implements Task {
   }
 
   /**
+   * Retrieves the antiTask.
+   *
+   * @return antiTask - the Anti-Task.
+   */
+  public AntiTask getAntiTask() {
+    return antiTask;
+  }
+
+  /**
+   * Retrieves the dates for a recurring task with AntiTask applied.
+   *
+   * @return HashSet(Integer) - the container for the dates.
+   */
+  public HashSet<Integer> getDates() {
+    HashSet<Integer> dates = new HashSet<>();
+
+    // While the end date has not been reached.
+    int currentDate = startDate;
+    while (currentDate < endDate) {
+      if (currentDate != antiTask.getStartDate()) {
+        // Add current date to the set.
+        dates.add(currentDate);
+        // Increase date by frequency.
+        currentDate = DateAndTime.increaseDayForYYYYMMDD(currentDate, frequency);
+      }
+    }
+
+    return dates;
+  }
+
+  /**
    * Retrieves all the dates for a recurring task.
    *
    * @return HashSet(Integer) - the container for all of the dates.
    */
-  public HashSet<Integer> getDates() {
+  public HashSet<Integer> getDatesIgnoreAnti() {
     HashSet<Integer> dates = new HashSet<>();
 
     // While the end date has not been reached.
