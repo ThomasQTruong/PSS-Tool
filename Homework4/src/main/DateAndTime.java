@@ -251,7 +251,7 @@ public class DateAndTime {
   public static int setMonthForYYYYMMDD(int date, int month) {
     // Invalid month given.
     if (month < 1 || month > 12) {
-      return 0;
+      return -1;
     }
 
     // Remove current month.
@@ -274,7 +274,7 @@ public class DateAndTime {
   public static int setDayForYYYYMMDD(int date, int day) {
     // Invalid day given.
     if (day < 1 || day > getDaysInMonth(getYearFromYYYYMMDD(date), getMonthFromYYYYMMDD(date))) {
-      return 0;
+      return -1;
     }
 
     // Reset day to 0.
@@ -409,6 +409,47 @@ public class DateAndTime {
     date = increaseMonthForYYYYMMDD(date);
     // Set to the first day of the month.
     date = setDayForYYYYMMDD(date, 1);
+
+    return date;
+  }
+
+
+  /**
+   * Increase the day of a YYYYMMDD formatted date by xNumberOfDays.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @param xNumberOfDays - the number of days to increase by.
+   * @return int - the incremented date or -1 if failed.
+   */
+  public static int increaseDayForYYYYMMDD(int date, int xNumberOfDays) {
+    // Out of range.
+    if (xNumberOfDays < 1 || xNumberOfDays + getDayFromYYYYMMDD(date) > 99) {
+      return -1;
+    }
+
+    // Add xNumberOfDays day to date.
+    date += xNumberOfDays;
+    
+    // No need to fix.
+    if (isValidYYYYMMDD(date)) {
+      return date;
+    }
+
+    // While there are still days to change.
+    while (xNumberOfDays > 0) {
+      // Get values.
+      int year = getYearFromYYYYMMDD(date);
+      int month = getMonthFromYYYYMMDD(date);
+      int day = getDayFromYYYYMMDD(date);
+      int totalDays = getDaysInMonth(year, month);
+      
+      // day goes over to next month.
+      if (day > totalDays) {
+        date -= totalDays;
+        xNumberOfDays -= totalDays;
+        date = increaseMonthForYYYYMMDD(date);
+      }
+    }
 
     return date;
   }
