@@ -162,9 +162,9 @@ public class RecurringTask implements Task {
       if (currentDate != antiTask.getStartDate()) {
         // Add current date to the set.
         dates.add(currentDate);
-        // Increase date by frequency.
-        currentDate = DateAndTime.increaseDayForYYYYMMDD(currentDate, frequency);
       }
+      // Increase date by frequency.
+      currentDate = DateAndTime.increaseDayForYYYYMMDD(currentDate, frequency);
     }
 
     return dates;
@@ -222,7 +222,6 @@ public class RecurringTask implements Task {
       // Does not contain the same start date, no confliction.
       return false;
     }
-
     // Since dates are the matching, check for overlapping time.
     return DateAndTime.areTimesOverlapping(startTime, duration,
                                            otherTask.getStartTime(), otherTask.getDuration());
