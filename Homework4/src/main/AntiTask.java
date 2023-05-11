@@ -83,4 +83,11 @@ public class AntiTask implements Task {
   public int getStartDate() {
     return startDate;
   }
+
+
+  // Other methods.
+  @Override
+  public boolean isConflictingWith(Task otherTask) {
+    return false;
+  }
 }

@@ -103,4 +103,13 @@ public interface Task {
    * @return int - the start date.
    */
   public int getStartDate();
+
+
+  /**
+   * Checks if the task conflicts with the other task.
+   *
+   * @param otherTask - the task to check for confliction.
+   * @return boolean - whether it conflicts with the task or not.
+   */
+  public boolean isConflictingWith(Task otherTask);
 }

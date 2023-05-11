@@ -1,5 +1,7 @@
 package main;
 
+import java.util.HashSet;
+
 /**
  * Placeholder javadoc.
  */
@@ -82,5 +84,29 @@ public class TransientTask implements Task {
   @Override
   public int getStartDate() {
     return startDate;
+  }
+
+
+  // Other methods.
+  @Override
+  public boolean isConflictingWith(Task otherTask) {
+    // Other task is a recurring task.
+    if (otherTask.getIdentity() == Task.RECURRING_TASK) {
+      HashSet<Integer> otherTaskDates = ((RecurringTask) otherTask).getDates();
+
+      // Overlapping.
+      if (otherTaskDates.contains(startDate)) {
+        float otherTaskEndTime = otherTask.getStartTime() + otherTask.getDuration();
+        // if ()
+        return true;
+      }
+      // Not overlapping.
+      return false;
+    }
+    // Is anti/transient: if dates are the same.
+    if (otherTask.getStartDate() == startDate) {
+      return false;  // TEST
+    }
+    return false;  // TEST
   }
 }

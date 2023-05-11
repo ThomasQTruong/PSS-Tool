@@ -124,7 +124,6 @@ public class RecurringTask implements Task {
     return frequency;
   }
 
-
   /**
    * Retrieves all the dates for a recurring task.
    *
@@ -143,5 +142,12 @@ public class RecurringTask implements Task {
     }
 
     return dates;
+  }
+
+
+  // Other methods.
+  @Override
+  public boolean isConflictingWith(Task otherTask) {
+    return false;
   }
 }
