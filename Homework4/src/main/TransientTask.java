@@ -90,23 +90,22 @@ public class TransientTask implements Task {
   // Other methods.
   @Override
   public boolean isConflictingWith(Task otherTask) {
-    // Other task is a recurring task.
+    // Other task is a recurring task; check if theres a matching date.
     if (otherTask.getIdentity() == Task.RECURRING_TASK) {
       HashSet<Integer> otherTaskDates = ((RecurringTask) otherTask).getDates();
 
-      // Overlapping.
-      if (otherTaskDates.contains(startDate)) {
-        float otherTaskEndTime = otherTask.getStartTime() + otherTask.getDuration();
-        // if ()
-        return true;
+      // Date does not match, cannot overlap.
+      if (!otherTaskDates.contains(startDate)) {
+        return false;
       }
-      // Not overlapping.
+    } else if (otherTask.getStartDate() != startDate) {
+      // Is a transient/anti AND date are not matching.
       return false;
     }
-    // Is anti/transient: if dates are the same.
-    if (otherTask.getStartDate() == startDate) {
-      return false;  // TEST
-    }
-    return false;  // TEST
+
+    // Since dates are the matching, check for overlapping time.
+    float otherEndTime = otherTask.getStartTime() + otherTask.getDuration();
+    return DateAndTime.areTimesOverlapping(startTime, startTime + duration,
+                                           otherTask.getStartTime(), otherEndTime);
   }
 }
