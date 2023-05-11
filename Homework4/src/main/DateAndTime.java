@@ -38,7 +38,7 @@ public class DateAndTime {
    * @return int - the formatted date.
    */
   public static int getCurrentYYYYMMDD() {
-    return (getYear() * 10000) + (getMonth() * 100) + getDay();
+    return (getCurrentYear() * 10000) + (getCurrentMonth() * 100) + getCurrentDay();
   }
 
 
@@ -47,7 +47,7 @@ public class DateAndTime {
    *
    * @return int - the current year.
    */
-  public static int getYear() {
+  public static int getCurrentYear() {
     return Calendar.getInstance().get(Calendar.YEAR);
   }
 
@@ -57,7 +57,7 @@ public class DateAndTime {
    *
    * @return int - the current month.
    */
-  public static int getMonth() {
+  public static int getCurrentMonth() {
     return Calendar.getInstance().get(Calendar.MONTH);
   }
 
@@ -67,7 +67,7 @@ public class DateAndTime {
    *
    * @return int - the current day.
    */
-  public static int getDay() {
+  public static int getCurrentDay() {
     return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
   }
 
@@ -122,9 +122,9 @@ public class DateAndTime {
    */
   public static boolean isValidYYYYMMDD(int date) {
     // Extract year, month, and date.
-    int year = date / 10000;
-    int month = (date % 10000) / 100;
-    int day = date % 100;
+    int year = getYearFromYYYYMMDD(date);
+    int month = getMonthFromYYYYMMDD(date);
+    int day = getDayFromYYYYMMDD(date);
 
     // Check if year, month, and day are valid.
     if (year > 9999) {
@@ -139,5 +139,303 @@ public class DateAndTime {
     
     // Valid month and day.
     return true;
+  }
+
+
+  /**
+   * Extracts the year from a YYYYMMDD formatted date.
+   *
+   * @param date - the YYYYMMDD formatted date to extract from.
+   * @return int - the year extracted.
+   */
+  public static int getYearFromYYYYMMDD(int date) {
+    return date / 10000;
+  }
+
+
+  /**
+   * Extracts the month from a YYYYMMDD formatted date.
+   *
+   * @param date - the YYYYMMDD formatted date to extract from.
+   * @return int - the month extracted.
+   */
+  public static int getMonthFromYYYYMMDD(int date) {
+    return (date % 10000) / 100;
+  }
+
+
+  /**
+   * Extracts the day from a YYYYMMDD formatted date.
+   *
+   * @param date - the YYYYMMDD formatted date to extract from.
+   * @return int - the day extracted.
+   */
+  public static int getDayFromYYYYMMDD(int date) {
+    return date % 100;
+  }
+
+
+  /**
+   * Increments the year of a YYYYMMDD formatted date by 1.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @return int - the incremented date.
+   */
+  public static int increaseYearForYYYYMMDD(int date) {
+    // At max range, dont increase.
+    if (getYearFromYYYYMMDD(date) == 9999) {
+      return date;
+    }
+    
+    return date += 10000;
+  }
+
+
+  /**
+   * Increments the year of a YYYYMMDD formatted date by xNumberOfYears.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @param xNumberOfYears - the number of years to increment by.
+   * @return int - the incremented date.
+   */
+  public static int increaseYearForYYYYMMDD(int date, int xNumberOfYears) {
+    // At max range, dont increase.
+    if (getYearFromYYYYMMDD(date) + xNumberOfYears > 9999) {
+      return date;
+    }
+    
+    return date += (xNumberOfYears * 10000);
+  }
+
+
+  /**
+   * Decrements the year of a YYYYMMDD formatted date by 1.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @return int - the decremented date.
+   */
+  public static int decreaseYearForYYYYMMDD(int date) {
+    // At min range, dont increase.
+    if (getYearFromYYYYMMDD(date) == 1000) {
+      return date;
+    }
+    
+    return date -= 10000;
+  }
+
+
+  /**
+   * Decrements the year of a YYYYMMDD formatted date by xNumberOfYears.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @param xNumberOfYears - the number of years to decrement by.
+   * @return int - the decremented date.
+   */
+  public static int decreaseYearForYYYYMMDD(int date, int xNumberOfYears) {
+    // At min range, dont increase.
+    if (getYearFromYYYYMMDD(date) - xNumberOfYears < 1000) {
+      return date;
+    }
+    
+    return date -= (xNumberOfYears * 10000);
+  }
+
+
+  /**
+   * Sets the month for a YYYYMMDD formatted date to a specific month.
+   *
+   * @param date - the date to change the month for.
+   * @param month - the month to change to.
+   * @return int - the date with the month changed.
+   */
+  public static int setMonthForYYYYMMDD(int date, int month) {
+    // Invalid month given.
+    if (month < 1 || month > 12) {
+      return 0;
+    }
+
+    // Remove current month.
+    date -= (getMonthFromYYYYMMDD(month) * 100);
+
+    // Add new month.
+    date += (month * 100);
+
+    return date;
+  }
+
+
+  /**
+   * Sets the day for a YYYYMMDD formatted date.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @param day - the day to set to.
+   * @return int - the date with the day set.
+   */
+  public static int setDayForYYYYMMDD(int date, int day) {
+    // Invalid day given.
+    if (day < 1 || day > getDaysInMonth(getYearFromYYYYMMDD(date), getMonthFromYYYYMMDD(date))) {
+      return 0;
+    }
+
+    // Reset day to 0.
+    date = date - (date % 100);
+    // Add day.
+    date += day;
+
+    return date;
+  }
+
+
+  /**
+   * Increases the month of a YYYYMMDD formatted date by 1.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @return int - the incremented date.
+   *//**
+   * Increases the month of a YYYYMMDD formatted date by 1.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @return int - the incremented date.
+   */
+  public static int increaseMonthForYYYYMMDD(int date) {
+    // Is at the last month.
+    if (getMonthFromYYYYMMDD(date) == 12) {
+      // Increment year.
+      date = increaseYearForYYYYMMDD(date);
+      // Set month to first month.
+      date = setMonthForYYYYMMDD(date, 1);
+    } else {  // Not last month.
+      date = increaseMonthForYYYYMMDD(date);
+    }
+
+    return date;
+  }
+
+
+  /**
+   * Increases the month of a YYYYMMDD formatted date by xNumberOfMonths.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @param xNumberOfMonths - the number of months to increase by.
+   * @return int - the incremented date.
+   */
+  public static int increaseMonthForYYYYMMDD(int date, int xNumberOfMonths) {
+    int totalMonth = getMonthFromYYYYMMDD(date) + xNumberOfMonths;
+
+    // Over the cap.
+    if (totalMonth > 12) {
+      // Increment year by amount of 12 months passed.
+      date = increaseYearForYYYYMMDD(date, totalMonth / 12);
+      // Set month to proper month.
+      if (totalMonth % 12 == 0) {
+        date = setMonthForYYYYMMDD(date, 12);
+      } else {
+        date = setMonthForYYYYMMDD(date, totalMonth % 12);
+      }
+    } else {  // Not last month.
+      date = increaseMonthForYYYYMMDD(date, xNumberOfMonths);
+    }
+
+    return date;
+  }
+
+
+  /**
+   * Decreases the month of a YYYYMMDD formatted date by 1.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @return int - the decremented date.
+   */
+  public static int decreaseMonthForYYYYMMDD(int date) {
+    // Is at the first month.
+    if (getMonthFromYYYYMMDD(date) == 1) {
+      // Decrement year.
+      date = decreaseYearForYYYYMMDD(date);
+      // Set month to last month.
+      date = setMonthForYYYYMMDD(date, 12);
+    } else {  // Not first month.
+      date = decreaseMonthForYYYYMMDD(date);
+    }
+
+    return date;
+  }
+
+
+  /**
+   * Decreases the month of a YYYYMMDD formatted date by xNumberOfMonths.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @param xNumberOfMonths - the number of months to decrease by.
+   * @return int - the decremented date.
+   */
+  public static int decreaseMonthForYYYYMMDD(int date, int xNumberOfMonths) {
+    int totalMonth = getMonthFromYYYYMMDD(date) - xNumberOfMonths;
+
+    // Under the min.
+    if (totalMonth < 1) {
+      totalMonth = xNumberOfMonths - getMonthFromYYYYMMDD(date);
+      // Decrease year by amount of 12 months reverted.
+      date = increaseYearForYYYYMMDD(date, 1 + (totalMonth / 12));
+      // Set month to proper month.
+      if (totalMonth % 12 == 0) {
+        date = setMonthForYYYYMMDD(date, 12);
+      } else {
+        date = setMonthForYYYYMMDD(date, totalMonth % 12);
+      }
+    } else {  // Not last month.
+      date = increaseMonthForYYYYMMDD(date, xNumberOfMonths);
+    }
+
+    return date;
+  }
+
+
+  /**
+   * Increase the day of a YYYYMMDD formatted date by 1.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @return int - the incremented date.
+   */
+  public static int increaseDayForYYYYMMDD(int date) {
+    // Add 1 day to date.
+    date += 1;
+    
+    // No need to fix.
+    if (isValidYYYYMMDD(date)) {
+      return date;
+    }
+
+    // Need to fix; increase month by one.
+    date = increaseMonthForYYYYMMDD(date);
+    // Set to the first day of the month.
+    date = setDayForYYYYMMDD(date, 1);
+
+    return date;
+  }
+
+
+  /**
+   * Decrease the day of a YYYYMMDD formatted date by 1.
+   *
+   * @param date - the YYYYMMDD formatted date.
+   * @return int - the decremented date.
+   */
+  public static int decreaseDayForYYYYMMDD(int date) {
+    // Remove 1 day to date.
+    date -= 1;
+    
+    // No need to fix.
+    if (isValidYYYYMMDD(date)) {
+      return date;
+    }
+
+    // Need to fix; increase month by one.
+    date = decreaseMonthForYYYYMMDD(date);
+    // Set to the last day of the month.
+    int year = getYearFromYYYYMMDD(date);
+    int month = getMonthFromYYYYMMDD(date);
+    date = setDayForYYYYMMDD(date, getDaysInMonth(year, month));
+
+    return date;
   }
 }
