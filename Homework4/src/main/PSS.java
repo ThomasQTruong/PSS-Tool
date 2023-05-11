@@ -39,9 +39,7 @@ public class PSS {
           break;
         case 2:
           // View a task.
-          for (Task task : schedule.getTasks()) {
-            System.out.printf("%s | %d | %f | %f\n", task.getName(), task.getStartDate(), task.getStartTime(), task.getDuration());
-          }
+          viewTask();
           break;
         case 3:
           // Delete a task.
@@ -250,6 +248,17 @@ public class PSS {
 
   // Option 2.
   private static boolean viewTask() {
+    for (Task task : schedule.getTasks()) {
+      if (task.getIdentity() == Task.RECURRING_TASK) {
+        RecurringTask recurringTask = (RecurringTask) task;
+        System.out.printf("%s | %d | %d | %f | %f\n", task.getName(), task.getStartDate(),
+                                                      recurringTask.getEndDate(),
+                                                      task.getStartTime(), task.getDuration());
+      } else {
+        System.out.printf("%s | %d | %f | %f\n", task.getName(), task.getStartDate(),
+                                               task.getStartTime(), task.getDuration());
+      }
+    }
     return true;
   }
 
@@ -304,6 +313,111 @@ public class PSS {
     }
     int userOption = ConsoleInput.getIntRange("Enter the property you want to edit.",
                                               0, amountOfOptions);
+
+    // Do edit based on chosen option.
+    if (userOption == 0) {
+      // 0: Cancel operation.
+      return false;
+    } else if (userOption == 1) {
+      // 1: Edit name.
+      String newName = ConsoleInput.getString("Enter the new name you would like.");
+
+      // Name exists.
+      if (schedule.containsName(newName)) {
+        return false;
+      }
+
+      taskToEdit.setName(newName);
+    } else if (userOption == 2) {
+      // 2: Edit type.
+      System.out.println();
+      String newType = getTaskType(taskToEdit.getIdentity());
+      taskToEdit.setType(newType);
+    } else if (userOption == 3) {
+      // 3: Edit start time.
+      float startTime = ConsoleInput.getFloatRange("Enter the starting time of task [0 - 23.75].",
+                                               0.0f, 23.75f);
+      float oldStartTime = taskToEdit.getStartTime();
+      taskToEdit.setStartTime(startTime);
+
+      // New time overlaps with another task.
+      if (schedule.reportOverlap(taskToEdit)) {
+        // Revert changes.
+        taskToEdit.setStartTime(oldStartTime);
+        System.out.println("[!!!] Unable to change start time: overlapping issue.");
+        return false;
+      }
+    } else if (userOption == 4) {
+      // 4: Edit duration.
+      float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
+                                                0.25f, 23.75f);
+      float oldDuration = taskToEdit.getDuration();
+      taskToEdit.setDuration(duration);
+
+      // New duration overlaps with another task.
+      if (schedule.reportOverlap(taskToEdit)) {
+        // Revert changes.
+        taskToEdit.setDuration(oldDuration);
+        System.out.println("[!!!] Unable to change duration: overlapping issue.");
+        return false;
+      }
+    } else if (userOption == 5) {
+      // 5: Edit start date.
+      int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
+                                         DateAndTime.getCurrentYYYYMMDD());
+      // Invalid startDate, keep asking for a valid one.
+      while (!DateAndTime.isValidYYYYMMDD(startDate)) {
+        startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
+                                          DateAndTime.getCurrentYYYYMMDD());
+      }
+      // Save old start date incase overlap issue.
+      int oldDate = taskToEdit.getStartDate();
+      taskToEdit.setStartDate(startDate);
+      
+      // New date overlaps with another task.
+      if (schedule.reportOverlap(taskToEdit)) {
+        // Revert changes.
+        taskToEdit.setStartDate(oldDate);
+        System.out.println("[!!!] Unable to change start date: overlapping issue.");
+        return false;
+      }
+    } else if (userOption == 6) {
+      // 6: Edit end date.
+      int endDate = ConsoleInput.getIntMin("Enter the end date of the task [YYYYMMDD].",
+                                           taskToEdit.getStartDate() + 1);
+      // Invalid endDate, keep asking for a valid one.
+      while (!DateAndTime.isValidYYYYMMDD(endDate)) {
+        endDate = ConsoleInput.getIntMin("Invalid end date. Try again.",
+                                         taskToEdit.getStartDate() + 1);
+      }
+      // Save old end date incase overlap issue.
+      RecurringTask recurringTaskToEdit = (RecurringTask) taskToEdit;
+      int oldDate = recurringTaskToEdit.getEndDate();
+      recurringTaskToEdit.setEndDate(endDate);
+      
+      // New date overlaps with another task.
+      if (schedule.reportOverlap(taskToEdit)) {
+        // Revert changes.
+        recurringTaskToEdit.setEndDate(oldDate);
+        System.out.println("[!!!] Unable to change end date: overlapping issue.");
+        return false;
+      }
+    } else if (userOption == 7) {
+      int frequency = ConsoleInput.getIntRange("Enter the frequency of the task in days [1 - 7].",
+                                           1, 7);
+      // Get old frequency incase overlap.
+      RecurringTask recurringTaskToEdit = (RecurringTask) taskToEdit;
+      int oldFrequency = recurringTaskToEdit.getFrequency();
+      recurringTaskToEdit.setFrequency(frequency);
+
+      // New frequency overlaps with another task.
+      if (schedule.reportOverlap(taskToEdit)) {
+        // Revert changes.
+        recurringTaskToEdit.setFrequency(oldFrequency);
+        System.out.println("[!!!] Unable to change frequency: overlapping issue.");
+        return false;
+      }
+    }
 
     return true;
   }
