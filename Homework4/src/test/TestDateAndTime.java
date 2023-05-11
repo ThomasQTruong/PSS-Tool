@@ -11,6 +11,28 @@ public class TestDateAndTime {
     if (Test_roundMinutesToNearest15(case1, expected1)) {
       System.out.println("roundMinutesToNearest15() was successful.");
     }
+
+
+    // Test isLeapYear()
+    System.out.println("Testing: isLeapYear()");
+    int[] years = {1900, 2000, 2004, 2008, 1800};
+    boolean[] expected2 = {false, true, true, true, false};
+
+    Test_isLeapYear(years, expected2);
+    if(Test_isLeapYear(years, expected2)) {
+      System.out.println("isLeapYear() was successful.");
+    }
+
+    // Test isValidYYYYMMDD()
+    System.out.println("Testing: isValidYYYYMMDD()");
+    int[] dates = {20230521, 9000521, 20040202, 20220202, 18000808};
+    boolean[] expected3 = {true, true, true, true, true};
+
+    if(Test_isValidYYYYMMDD(dates, expected3)) {
+      System.out.println("isValidYYYYMMDD() was successful.");
+    }
+
+
   }
 
   // Tests roundMinutesToNearest15()
@@ -26,4 +48,36 @@ public class TestDateAndTime {
 
     return success;
   }
+
+  // Tests isLeapYear()
+  public static boolean Test_isLeapYear(int[] years, boolean[] expected) {
+    boolean success = true;
+
+    for (int i = 0; i < years.length; ++i) {
+      if(DateAndTime.isLeapYear(years[i]) != expected[i]) {
+        System.out.println("Year: " + years[i] + " Result:" + DateAndTime.isLeapYear(years[i]) + " Expected:" + expected[i]);
+        return success = false;
+      }
+
+    }
+
+    return success;
+  }
+
+  // Tests isValidYYYYMMDD()
+  public static boolean Test_isValidYYYYMMDD(int[] dates, boolean[] expected) {
+    boolean success = true;
+
+    for (int i = 0; i < dates.length; ++i) {
+      if(DateAndTime.isValidYYYYMMDD(dates[i]) != expected[i]) {
+        System.out.println("Date: " + dates[i] + " Result:" + DateAndTime.isValidYYYYMMDD(dates[i]) + " Expected:" + expected[i]);
+        return success = false;
+      }
+
+    }
+
+    return success;
+  }
+
+
 }
