@@ -9,6 +9,7 @@ public class AntiTask implements Task {
   public static final String[] TASK_TYPES = {"Cancellation"};
 
   // Fields.
+  private RecurringTask recurringTask = null;
   private String name = "";
   private String type = "";
   private int startDate = 0;
@@ -40,6 +41,15 @@ public class AntiTask implements Task {
   @Override
   public void setStartDate(int startDate) {
     this.startDate = startDate;
+  }
+
+  /**
+   * Sets the recurringTask to a new one.
+   *
+   * @param recurringTask - the new Recurring Task.
+   */
+  public void setRecurringTask(RecurringTask recurringTask) {
+    this.recurringTask = recurringTask;
   }
 
 
@@ -84,10 +94,30 @@ public class AntiTask implements Task {
     return startDate;
   }
 
+  /**
+   * Retrieves the recurringTask.
+   *
+   * @return recurringTask - the Recurring Task.
+   */
+  public RecurringTask getRecurringTask() {
+    return recurringTask;
+  }
+
 
   // Other methods.
   @Override
   public boolean isConflictingWith(Task otherTask) {
+    // Checking itself.
+    if (this == otherTask) {
+      return false;
+    }
+    // Can only conflict with another AntiTask.
+    if (otherTask.getIdentity() == Task.ANTI_TASK) {
+      // Check if the two anti-tasks are conflicting.
+      return DateAndTime.areTimesOverlapping(startTime, duration,
+                                             otherTask.getStartTime(), otherTask.getDuration());
+    }
+    // Not an AntiTask, cannot conflict.
     return false;
   }
 }
