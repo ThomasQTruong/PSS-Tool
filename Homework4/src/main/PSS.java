@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -199,7 +200,7 @@ public class PSS {
     int userOption = ConsoleInput.getIntRange("Please choose a task type.", 1, amountOfOptions);
     System.out.println();
 
-    return taskTypes[userOption];
+    return taskTypes[userOption - 1];
   }
 
   /**
@@ -239,10 +240,42 @@ public class PSS {
       RecurringTask recurringNewTask = (RecurringTask) newTask;
       recurringNewTask.setEndDate(endDate);
       recurringNewTask.setFrequency(frequency);
-    }
-    
-    // WIP.
+    } else if (taskIdentity == Task.ANTI_TASK) {
+      AntiTask antiNewTask = (AntiTask) newTask;
 
+      // Get overlaps.
+      ArrayList<Task> collisions = schedule.getCollisions(newTask);
+      
+      // No overlap found, cannot make anti-task.
+      if (collisions.size() == 0)  {
+        return false;
+      }
+
+      // Overlap found, check if it collides with a Recurring task.
+      for (Task collidedTask : collisions) {
+        if (collidedTask.getIdentity() == Task.RECURRING_TASK) {
+          // Recurring task already has an anti task!
+          RecurringTask recurringCollided = (RecurringTask) collidedTask;
+          if (recurringCollided.getAntiTask() != null) {
+            return false;
+          } else {
+            // Does not have an anti-task yet, link them.
+            recurringCollided.setAntiTask(antiNewTask);
+            antiNewTask.setRecurringTask(recurringCollided);
+            return schedule.addTask(newTask);
+          }
+        }
+      }
+      // No recurring overlap.
+      return false;
+    }
+
+    // For non-AntiTasks, if it overlaps with anything.
+    if (schedule.reportOverlap(newTask)) {
+      return false;
+    }
+
+    // No overlap, create task.
     return schedule.addTask(newTask);
   }
 
