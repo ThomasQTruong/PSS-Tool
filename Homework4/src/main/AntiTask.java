@@ -107,6 +107,17 @@ public class AntiTask implements Task {
   // Other methods.
   @Override
   public boolean isConflictingWith(Task otherTask) {
+    // Checking itself.
+    if (this == otherTask) {
+      return false;
+    }
+    // Can only conflict with another AntiTask.
+    if (otherTask.getIdentity() == Task.ANTI_TASK) {
+      // Check if the two anti-tasks are conflicting.
+      return DateAndTime.areTimesOverlapping(startTime, duration,
+                                             otherTask.getStartTime(), otherTask.getDuration());
+    }
+    // Not an AntiTask, cannot conflict.
     return false;
   }
 }
