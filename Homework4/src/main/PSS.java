@@ -43,11 +43,15 @@ public class PSS {
           break;
         case 3:
           // Delete a task.
-          deleteTask();
+          if (deleteTask()) {
+            System.out.println("[!!!] Failed to delete task: task does not exist.");
+          }
           break;
         case 4:
           // Edit a task.
-          editTask();
+          if (!editTask()) {
+            System.out.println("[!!!] Failed to edit task: name or overlapping issue.");
+          }
           break;
         case 5:
           // Write the schedule to a file.
@@ -242,7 +246,7 @@ public class PSS {
   }
 
 
-  // Option 2.
+  // Option 2: NOT DONE, JUST TESTING OTHER FUNCTIONS.
   private static boolean viewTask() {
     for (Task task : schedule.getTasks()) {
       if (task.getIdentity() == Task.RECURRING_TASK) {
@@ -313,7 +317,7 @@ public class PSS {
     // Do edit based on chosen option.
     if (userOption == 0) {
       // 0: Cancel operation.
-      return false;
+      return true;  // Edit technically successful, just stopped editing.
     } else if (userOption == 1) {
       // 1: Edit name.
       String newName = ConsoleInput.getString("Enter the new name you would like.");
@@ -340,7 +344,6 @@ public class PSS {
       if (schedule.reportOverlap(taskToEdit)) {
         // Revert changes.
         taskToEdit.setStartTime(oldStartTime);
-        System.out.println("[!!!] Unable to change start time: overlapping issue.");
         return false;
       }
     } else if (userOption == 4) {
@@ -354,7 +357,6 @@ public class PSS {
       if (schedule.reportOverlap(taskToEdit)) {
         // Revert changes.
         taskToEdit.setDuration(oldDuration);
-        System.out.println("[!!!] Unable to change duration: overlapping issue.");
         return false;
       }
     } else if (userOption == 5) {
@@ -374,7 +376,6 @@ public class PSS {
       if (schedule.reportOverlap(taskToEdit)) {
         // Revert changes.
         taskToEdit.setStartDate(oldDate);
-        System.out.println("[!!!] Unable to change start date: overlapping issue.");
         return false;
       }
     } else if (userOption == 6) {
@@ -395,7 +396,6 @@ public class PSS {
       if (schedule.reportOverlap(taskToEdit)) {
         // Revert changes.
         recurringTaskToEdit.setEndDate(oldDate);
-        System.out.println("[!!!] Unable to change end date: overlapping issue.");
         return false;
       }
     } else if (userOption == 7) {
@@ -410,7 +410,6 @@ public class PSS {
       if (schedule.reportOverlap(taskToEdit)) {
         // Revert changes.
         recurringTaskToEdit.setFrequency(oldFrequency);
-        System.out.println("[!!!] Unable to change frequency: overlapping issue.");
         return false;
       }
     }
@@ -468,10 +467,4 @@ public class PSS {
   private static boolean viewOrWriteForOneMonth() {
     return true;
   }
-
-  
-  // get schedule from Schedule class -- Brian Kang
-  // public ArrayList<Task> getSchedule() {
-  //   return schedule.getTasks();
-  // }
 }
