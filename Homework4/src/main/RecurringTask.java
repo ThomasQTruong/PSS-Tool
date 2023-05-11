@@ -189,6 +189,6 @@ public class RecurringTask implements Task {
   // Other methods.
   @Override
   public boolean isConflictingWith(Task otherTask) {
-    return false;
+    return otherTask.isConflictingWith(this);
   }
 }
