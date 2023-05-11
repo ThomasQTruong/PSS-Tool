@@ -90,6 +90,11 @@ public class TransientTask implements Task {
   // Other methods.
   @Override
   public boolean isConflictingWith(Task otherTask) {
+    // Checking itself.
+    if (this == otherTask) {
+      return false;
+    }
+
     // Other task is a recurring task; check if theres a matching date.
     if (otherTask.getIdentity() == Task.RECURRING_TASK) {
       HashSet<Integer> otherTaskDates = ((RecurringTask) otherTask).getDates();
