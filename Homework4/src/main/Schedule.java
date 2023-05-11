@@ -41,12 +41,10 @@ public class Schedule {
     if (containsName(task.getName())) {
       return false;
     }
-    // Given task is overlapping with another task.
-    if (reportOverlap(task)) {
-      return false;
-    }
-    // Not over lapping, add task.
+
+    // Name is free, add task.
     listOfTasks.add(task);
+
     return true;
   }
 
@@ -121,6 +119,30 @@ public class Schedule {
     }
 
     return false;
+  }
+
+
+  /**
+   * Retrives a list of tasks that toCheck overlaps with.
+   *
+   * @param toCheck - the task to check for overlap.
+   * @return ArrayList(Task) - the list of collisions.
+   */
+  public ArrayList<Task> getCollisions(Task toCheck) {
+    ArrayList<Task> collisions = new ArrayList<>();
+    
+    // For every task.
+    for (Task task : listOfTasks) {
+      // Not itself.
+      if (task != toCheck) {
+        // Is conflicting.
+        if (task.isConflictingWith(toCheck)) {
+          collisions.add(task);
+        }
+      }
+    }
+
+    return collisions;
   }
 
 
