@@ -136,8 +136,9 @@ public class PSS {
                                          startDate + 1);
       }
 
-      frequency = ConsoleInput.getIntRange("Enter the frequency of the task in days [1 - 7].",
-                                           1, 7);
+      while (frequency != 1 || frequency != 7) {
+        frequency = ConsoleInput.getInt("Enter the task frequency [1 (daily) | 7 (weekly)].");
+      }
     }
 
     // call enterTask() and add to schedule list 
@@ -399,8 +400,10 @@ public class PSS {
         return false;
       }
     } else if (userOption == 7) {
-      int frequency = ConsoleInput.getIntRange("Enter the frequency of the task in days [1 - 7].",
-                                           1, 7);
+      int frequency = 0;
+      while (frequency != 1 || frequency != 7) {
+        frequency = ConsoleInput.getInt("Enter the task frequency [1 (daily) | 7 (weekly)].");
+      }
       // Get old frequency incase overlap.
       RecurringTask recurringTaskToEdit = (RecurringTask) taskToEdit;
       int oldFrequency = recurringTaskToEdit.getFrequency();
