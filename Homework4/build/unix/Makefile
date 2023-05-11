@@ -20,3 +20,7 @@ clean:
 # Creates and runs the program.
 run:
 	make clean && make && java -cp ../../bin/ main.PSS
+
+# Creates and runs the unit test.
+test:
+	make clean && make && java -cp ../../bin/ test.TestDateAndTime
