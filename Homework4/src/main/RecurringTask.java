@@ -1,5 +1,7 @@
 package main;
 
+import java.util.HashSet;
+
 /**
  * Placeholder javadoc.
  */
@@ -44,10 +46,20 @@ public class RecurringTask implements Task {
     this.startDate = startDate;
   }
 
+  /**
+   * Sets the end date to a new one.
+   *
+   * @param endDate - the new end date.
+   */
   public void setEndDate(int endDate) {
     this.endDate = endDate;
   }
 
+  /**
+   * Sets the frequency to a new one.
+   *
+   * @param frequency - the new frequency.
+   */
   public void setFrequency(int frequency) {
     this.frequency = frequency;
   }
@@ -94,11 +106,42 @@ public class RecurringTask implements Task {
     return startDate;
   }
 
+  /**
+   * Retrieves the end date.
+   *
+   * @return int - the end date.
+   */
   public int getEndDate() {
     return endDate;
   }
 
+  /**
+   * Retrieves the frequency.
+   *
+   * @return int - the frequency.
+   */
   public int getFrequency() {
     return frequency;
+  }
+
+
+  /**
+   * Retrieves all the dates for a recurring task.
+   *
+   * @return HashSet(Integer) - the container for all of the dates.
+   */
+  public HashSet<Integer> getDates() {
+    HashSet<Integer> dates = new HashSet<>();
+
+    // While the end date has not been reached.
+    int currentDate = startDate;
+    while (currentDate < endDate) {
+      // Add current date to the set.
+      dates.add(currentDate);
+      // Increase date by frequency.
+      currentDate = DateAndTime.increaseDayForYYYYMMDD(currentDate, frequency);
+    }
+
+    return dates;
   }
 }
