@@ -1,6 +1,8 @@
 package main;
 
 import java.util.Calendar;
+import java.util.HashSet;
+import java.lang.Math;
 
 /**
  * Utility class for Date and Time related methods.
@@ -478,5 +480,46 @@ public class DateAndTime {
     date = setDayForYYYYMMDD(date, getDaysInMonth(year, month));
 
     return date;
+  }
+
+
+  /**
+   * Checks if two times are conflicting.
+   *
+   * @param startTime1 - the first starting time.
+   * @param endTime1 - the first ending time.
+   * @param startTime2 - the second starting time.
+   * @param endTime2 - the second end time.
+   * @return boolean - whether the times are conflicting or not.
+   */
+  public static boolean areTimesOverlapping(float startTime1, float endTime1,
+                                            float startTime2, float endTime2) {
+    // Convert to int to try to minimize floating arithmetic errors.
+    int start1 = (int) Math.round(startTime1 * 100);
+    int end1 = (int) Math.round(endTime1 * 100);
+    int start2 = (int) Math.round(startTime2 * 100);
+    int end2 = (int) Math.round(endTime2 * 100);
+
+    // Get the possible times for the ranges (15 minute intervals).
+    // End times are excluded.
+    HashSet<Integer> timeRange1 = new HashSet<>();
+    for (int start = start1; start < end1; start += 25) {
+      timeRange1.add(start);
+    }
+    HashSet<Integer> timeRange2 = new HashSet<>();
+    for (int start = start2; start < end2; start += 25) {
+      timeRange2.add(start);
+    }
+
+    // For every time in timeRange2.
+    for (int time : timeRange2) {
+      // If time exists in timeRange1: time overlaps.
+      if (timeRange1.contains(time)) {
+        return true;
+      }
+    }
+
+    // Does not overlap.
+    return false;
   }
 }

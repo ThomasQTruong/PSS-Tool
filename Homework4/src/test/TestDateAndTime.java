@@ -17,9 +17,8 @@ public class TestDateAndTime {
     System.out.println("Testing: isLeapYear()");
     int[] years = {1900, 2000, 2004, 2008, 1800};
     boolean[] expected2 = {false, true, true, true, false};
-
     Test_isLeapYear(years, expected2);
-    if(Test_isLeapYear(years, expected2)) {
+    if (Test_isLeapYear(years, expected2)) {
       System.out.println("isLeapYear() was successful.");
     }
 
@@ -28,11 +27,13 @@ public class TestDateAndTime {
     int[] dates = {20230521, 9000521, 20040202, 20220202, 18000808};
     boolean[] expected3 = {true, true, true, true, true};
 
-    if(Test_isValidYYYYMMDD(dates, expected3)) {
+    if (Test_isValidYYYYMMDD(dates, expected3)) {
       System.out.println("isValidYYYYMMDD() was successful.");
     }
 
-
+    // Test areTimesOverlapping()
+    System.out.println("Testing: areTimesOverlapping()");
+    Test_areTimesOverlapping();
   }
 
   // Tests roundMinutesToNearest15()
@@ -79,5 +80,23 @@ public class TestDateAndTime {
     return success;
   }
 
+  public static boolean Test_areTimesOverlapping() {
+    boolean success = true;
 
+    boolean[] expected = {false, true, true, true, true};
+    boolean[] results = new boolean[5];
+    results[0] = DateAndTime.areTimesOverlapping(1.0f, 3.0f, 3.0f, 6.0f);
+    results[1] = DateAndTime.areTimesOverlapping(1.0f, 3.0f, 2.0f, 3.0f);
+    results[2] = DateAndTime.areTimesOverlapping(1.0f, 3.0f, 2.0f, 5.0f);
+    results[3] = DateAndTime.areTimesOverlapping(2.0f, 3.0f, 1.0f, 6.0f);
+    results[4] = DateAndTime.areTimesOverlapping(1.0f, 6.0f, 2.0f, 3.0f);
+
+    for (int i = 0; i < results.length; ++i) {
+      if (results[i] != expected[i]) {
+        System.out.printf("areTimesOverlapping(%d): expected: %b, got %b.\n", i, expected[i], results[i]);
+        success = false;
+      }
+    }
+    return success;
+  }
 }
