@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Iterator;
+
 /**
  * Placeholder javadoc.
  */
@@ -43,9 +45,11 @@ public class PSS {
           break;
         case 3:
           // Delete a task.
+          deleteTask();
           break;
         case 4:
           // Edit a task.
+          editTask();
           break;
         case 5:
           // Write the schedule to a file.
@@ -250,81 +254,90 @@ public class PSS {
   }
 
 
-  /* Option 3.
-  *
-  * deletes task by asking for name of the task
-  *
-  */
+  /**
+   * Option 3: deletes task by asking for name of the task.
+   *
+   * @return boolean - whether the delete was successful or not.
+   */
   private static boolean deleteTask() {
+    // Displays existing tasks.
+    System.out.print("Tasks: ");
+    displayTasks();
+
+    // Get task name to delete.
     String taskToDelete = ConsoleInput.getString("Enter the name of the task to delete.");
+
     return schedule.deleteTaskByName(taskToDelete);
   }
 
 
-
-  /* Option 4.
-  * Asks for task to edit
-  * Asks for what attribute you want to edit
-  * NOT DONE
-  */ 
+  /**
+   * Option 4: edits the property a task.
+   *
+   * @return boolean - whether the edit was successful or not.
+   */ 
   private static boolean editTask() {
-    String taskToEdit = ConsoleInput.getString("Enter the name of the task you want to edit.");
-    boolean realTask = false;
+    // Displays existing tasks.
+    System.out.print("Tasks: ");
+    displayTasks();
 
-    Task editingTask = null;
-    for (Task theTask : schedule.getTasks()) {
-      if (theTask.getName().equals(taskToEdit)) {
-        editingTask = theTask;
-        realTask = true;
-        break;
-      }
+    String taskName = ConsoleInput.getString("Enter the name of the task you want to edit.");
+    System.out.println();
+    Task taskToEdit = schedule.getByName(taskName);
+    // Task does not exist.
+    if (taskToEdit == null) {
+      return false;
     }
 
-    if(realTask == true) {
-       //if it is an anti task then you can edit 1 more field
-       //if it is a recurring task then you gotta choose which date to edit
-       // or should it be it edits all of em?
-       // idk how to tell if its transient, recurring, or anti
-      if(editingTask.TASK_IDENTITY == 1) {
-
-      }
-
-      System.out.println("attribute to edit:");
-      System.out.println("[1] Name");
-      System.out.println("[2] Duration");
-      System.out.println("[3] Start Date");
-      System.out.println("[4] Start Time");
-      int thingToEdit  = ConsoleInput.getIntRange("Enter what you want to edit", 1, 4);
-
-      if(thingToEdit == 1) {
-        String newTaskName = ConsoleInput.getString("Enter the new name of the task");
-        editingTask.setName(newTaskName);
-      } else if(thingToEdit == 2) {
-        float newDuration = ConsoleInput.getFloat("Enter the new duration of the task");
-        editingTask.setDuration(newDuration);
-      } else if(thingToEdit == 3) {
-        int newStartDate= ConsoleInput.getInt("Enter the new start date of the task");
-        editingTask.setStartDate(newStartDate);
-      } else if(thingToEdit == 4) {
-        float newStartTime = ConsoleInput.getFloat("Enter the new duration of the task");
-        editingTask.setStartTime(newStartTime);
-      }
-
+    // Get amount of options based on task.
+    int amountOfOptions = 5;
+    if (taskToEdit.getIdentity() == Task.RECURRING_TASK) {
+      amountOfOptions = 7;
     }
+    String[] properties = {"Name", "Type", "Start Time", "Duration",
+                           "Start Date", "End Date", "Frequency"};
 
+    // Task exists, ask user what they want to change.
+    System.out.println("=Editable Properties=");
+    for (int i = 0; i < amountOfOptions; ++i) {
+      System.out.printf("[%d] %s\n", i + 1, properties[i]);
+    }
+    int userOption = ConsoleInput.getIntRange("Enter the property you want to edit.",
+                                              0, amountOfOptions);
 
     return true;
+  }
+
+  /**
+   * Prints out all of the existing tasks.
+   */
+  private static void displayTasks() {
+    // For every task.
+    Iterator<Task> taskIterator = schedule.getTasks().iterator();
+    // First item exists, just print it.
+    if (taskIterator.hasNext()) {
+      System.out.print(taskIterator.next().getName());
+    }
+    // More items exist, print with a comma in front.
+    while (taskIterator.hasNext()) {
+      System.out.print(", " + taskIterator.next().getName());
+    }
+    System.out.println();
   }
 
 
   // Option 5.
   private static boolean saveToFile() {
+    String fileName = ConsoleInput.getString("Enter the name you want the file to be saved as.");
+
     return true;
   }
 
 
   // Option 6.
   private static boolean loadFromFile() {
+    String fileName = ConsoleInput.getString("Enter the name of the file you want to load from.");
+
     return true;
   }
 
@@ -345,13 +358,6 @@ public class PSS {
   private static boolean viewOrWriteForOneMonth() {
     return true;
   }
-
-
-  // user given option to delete task by name --Brian Kang
-  //public void deleteTask(String taskName) {
-    // call the deleteTaskByName method of the Schedule object
-  //  schedule.deleteTaskByName(taskName);
-  //}
 
   
   // get schedule from Schedule class -- Brian Kang
