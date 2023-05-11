@@ -73,7 +73,7 @@ public class Schedule {
    * @param name - the name to check for.
    * @return boolean - whether a task has the name or not.
    */
-  private boolean containsName(String name) {
+  public boolean containsName(String name) {
     for (Task task : listOfTasks) {
       if (task.getName().equals(name)) {
         return true;
@@ -81,6 +81,23 @@ public class Schedule {
     }
 
     return false;
+  }
+
+
+  /**
+   * Gets a task in listOfTasks if exists.
+   *
+   * @param name - the name of the task to retrieve.
+   * @return Task - the task if exists; null otherwise.
+   */
+  public Task getByName(String name) {
+    for (Task task : listOfTasks) {
+      if (task.getName().equals(name)) {
+        return task;
+      }
+    }
+
+    return null;
   }
 
 
