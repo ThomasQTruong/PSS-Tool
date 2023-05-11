@@ -293,11 +293,6 @@ public class DateAndTime {
    *
    * @param date - the YYYYMMDD formatted date.
    * @return int - the incremented date.
-   *//**
-   * Increases the month of a YYYYMMDD formatted date by 1.
-   *
-   * @param date - the YYYYMMDD formatted date.
-   * @return int - the incremented date.
    */
   public static int increaseMonthForYYYYMMDD(int date) {
     // Is at the last month.
@@ -307,7 +302,7 @@ public class DateAndTime {
       // Set month to first month.
       date = setMonthForYYYYMMDD(date, 1);
     } else {  // Not last month.
-      date = increaseMonthForYYYYMMDD(date);
+      date += (1 * 10000);
     }
 
     return date;
@@ -335,7 +330,7 @@ public class DateAndTime {
         date = setMonthForYYYYMMDD(date, totalMonth % 12);
       }
     } else {  // Not last month.
-      date = increaseMonthForYYYYMMDD(date, xNumberOfMonths);
+      date += (xNumberOfMonths * 10000);
     }
 
     return date;
