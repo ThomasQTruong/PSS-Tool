@@ -107,19 +107,22 @@ public class Schedule {
    * @param newTask - the task to check for overlapping.
    * @return boolean - whether newTask overlaps or not.
    */
-  private boolean reportOverlap(Task newTask) {
+  public boolean reportOverlap(Task newTask) {
     // For every task.
     for (Task task : listOfTasks) {
-      // If the start date of the new task exists.
-      if (task.getStartDate() == newTask.getStartDate()) {
-        // Task start time + duration is less than new task's start time.
-        if (task.getStartTime() + task.getDuration() <= newTask.getStartTime()) {
-          System.out.printf("%f | %f <= %f | %f\n", task.getStartTime(), task.getDuration(), newTask.getStartTime(), newTask.getDuration());
-          return true;  // Overlap detected
+      // Not itself.
+      if (task != newTask) {
+        // If the start date of the new task exists.
+        if (task.getStartDate() == newTask.getStartDate()) {
+          // Task start time + duration is less than new task's start time.
+          if (task.getStartTime() + task.getDuration() <= newTask.getStartTime()) {
+            System.out.printf("%f | %f <= %f | %f\n", task.getStartTime(), task.getDuration(), newTask.getStartTime(), newTask.getDuration());
+            return true;  // Overlap detected.
+          }
         }
       }
     }
-    return false;  // No overlap found
+    return false;  // No overlap found.
   }
 
 
