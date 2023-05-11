@@ -487,18 +487,18 @@ public class DateAndTime {
    * Checks if two times are conflicting.
    *
    * @param startTime1 - the first starting time.
-   * @param endTime1 - the first ending time.
+   * @param duration1 - the first duration time.
    * @param startTime2 - the second starting time.
-   * @param endTime2 - the second end time.
+   * @param duration2 - the second duration time.
    * @return boolean - whether the times are conflicting or not.
    */
-  public static boolean areTimesOverlapping(float startTime1, float endTime1,
-                                            float startTime2, float endTime2) {
+  public static boolean areTimesOverlapping(float startTime1, float duration1,
+                                            float startTime2, float duration2) {
     // Convert to int to try to minimize floating arithmetic errors.
     int start1 = (int) Math.round(startTime1 * 100);
-    int end1 = (int) Math.round(endTime1 * 100);
+    int end1 = start1 + (int) Math.round(duration1 * 100);
     int start2 = (int) Math.round(startTime2 * 100);
-    int end2 = (int) Math.round(endTime2 * 100);
+    int end2 = start2 + (int) Math.round(duration2 * 100);
 
     // Get the possible times for the ranges (15 minute intervals).
     // End times are excluded.

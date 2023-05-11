@@ -85,11 +85,11 @@ public class TestDateAndTime {
 
     boolean[] expected = {false, true, true, true, true};
     boolean[] results = new boolean[5];
-    results[0] = DateAndTime.areTimesOverlapping(1.0f, 3.0f, 3.0f, 6.0f);
-    results[1] = DateAndTime.areTimesOverlapping(1.0f, 3.0f, 2.0f, 3.0f);
-    results[2] = DateAndTime.areTimesOverlapping(1.0f, 3.0f, 2.0f, 5.0f);
-    results[3] = DateAndTime.areTimesOverlapping(2.0f, 3.0f, 1.0f, 6.0f);
-    results[4] = DateAndTime.areTimesOverlapping(1.0f, 6.0f, 2.0f, 3.0f);
+    results[0] = DateAndTime.areTimesOverlapping(1.0f, 2.0f, 3.0f, 3.0f);
+    results[1] = DateAndTime.areTimesOverlapping(1.0f, 2.0f, 2.0f, 1.0f);
+    results[2] = DateAndTime.areTimesOverlapping(1.0f, 2.0f, 2.0f, 3.0f);
+    results[3] = DateAndTime.areTimesOverlapping(2.0f, 1.0f, 1.0f, 5.0f);
+    results[4] = DateAndTime.areTimesOverlapping(1.0f, 5.0f, 2.0f, 1.0f);
 
     for (int i = 0; i < results.length; ++i) {
       if (results[i] != expected[i]) {
@@ -97,6 +97,8 @@ public class TestDateAndTime {
         success = false;
       }
     }
+
+    System.out.println("areTimesOverlapping() was successful.");
     return success;
   }
 }
