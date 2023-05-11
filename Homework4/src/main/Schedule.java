@@ -109,49 +109,16 @@ public class Schedule {
    * @return boolean - whether newTask overlaps or not.
    */
   public boolean reportOverlap(Task newTask) {
-    int newTaskIdentity = newTask.getIdentity();
-    
     // For every task in listOfTasks.
     for (Task task : listOfTasks) {
       // Not itself.
       if (task != newTask) {
-      }
-    }
-
-    /*
-    // For every task in listOfTasks.
-    for (Task currentTask : listOfTasks) {
-      // Not itself.
-      if (currentTask != task) {
-        // Found recurring task in list.
-        if (currentTask.getIdentity() == Task.RECURRING_TASK) {
-          // Convert to RecurringTask classtype.
-          RecurringTask recurringCurrentTask = (RecurringTask) currentTask;
-          // task is also a recurring task.
-          if (task.getIdentity() == Task.RECURRING_TASK) {
-            RecurringTask recurringTask = (RecurringTask) task;
-            
-            // Check for conflicting time.
-            HashSet<Integer> currentTaskDates = recurringCurrentTask.getDates();
-            HashSet<Integer> taskDates = recurringTask.getDates();
-
-            for (int i : taskDates) {
-              // Confliction!
-              if (currentTaskDates.contains(i)) {
-                return true;
-              }
-            }
-            // No conflictions found.
-            return false;
-          // Is a transient/anti.
-          } else {
-            
-          }
-        } else {
-
+        // Is conflicting with newTask.
+        if (task.isConflictingWith(newTask)) {
+          return true;
         }
       }
-    }*/
+    }
 
     return false;
   }
