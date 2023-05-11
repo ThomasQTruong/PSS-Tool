@@ -3,6 +3,7 @@ package main;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 
 /**
  * Placeholder javadoc.
@@ -108,21 +109,51 @@ public class Schedule {
    * @return boolean - whether newTask overlaps or not.
    */
   public boolean reportOverlap(Task newTask) {
-    // For every task.
+    int newTaskIdentity = newTask.getIdentity();
+    
+    // For every task in listOfTasks.
     for (Task task : listOfTasks) {
       // Not itself.
       if (task != newTask) {
-        // If the start date of the new task exists.
-        if (task.getStartDate() == newTask.getStartDate()) {
-          // Task start time + duration is less than new task's start time.
-          if (task.getStartTime() + task.getDuration() <= newTask.getStartTime()) {
-            System.out.printf("%f | %f <= %f | %f\n", task.getStartTime(), task.getDuration(), newTask.getStartTime(), newTask.getDuration());
-            return true;  // Overlap detected.
-          }
-        }
       }
     }
-    return false;  // No overlap found.
+
+    /*
+    // For every task in listOfTasks.
+    for (Task currentTask : listOfTasks) {
+      // Not itself.
+      if (currentTask != task) {
+        // Found recurring task in list.
+        if (currentTask.getIdentity() == Task.RECURRING_TASK) {
+          // Convert to RecurringTask classtype.
+          RecurringTask recurringCurrentTask = (RecurringTask) currentTask;
+          // task is also a recurring task.
+          if (task.getIdentity() == Task.RECURRING_TASK) {
+            RecurringTask recurringTask = (RecurringTask) task;
+            
+            // Check for conflicting time.
+            HashSet<Integer> currentTaskDates = recurringCurrentTask.getDates();
+            HashSet<Integer> taskDates = recurringTask.getDates();
+
+            for (int i : taskDates) {
+              // Confliction!
+              if (currentTaskDates.contains(i)) {
+                return true;
+              }
+            }
+            // No conflictions found.
+            return false;
+          // Is a transient/anti.
+          } else {
+            
+          }
+        } else {
+
+        }
+      }
+    }*/
+
+    return false;
   }
 
 
