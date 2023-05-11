@@ -44,7 +44,7 @@ public class PSS {
           break;
         case 3:
           // Delete a task.
-          if (deleteTask()) {
+          if (!deleteTask()) {
             System.out.println("[!!!] Failed to delete task: task does not exist.");
           }
           break;
