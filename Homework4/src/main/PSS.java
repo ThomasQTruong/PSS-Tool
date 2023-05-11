@@ -212,36 +212,32 @@ public class PSS {
    */
   public static boolean enterTask(int taskIdentity, String name, String taskType, float startTime,
                                   float duration, int startDate, int endDate, int frequency) {
-    // use int taskIdentity to sort which task
+    // Create task based on identity.
     Task newTask;
-    switch (taskIdentity) {
-      case Task.RECURRING_TASK:
-        RecurringTask recurringTask = new RecurringTask();
-        recurringTask.setEndDate(endDate);
-        recurringTask.setFrequency(frequency);
-        newTask = recurringTask;
-        break;
-      case Task.TRANSIENT_TASK:
-        newTask = new TransientTask();
-        break;
-      case Task.ANTI_TASK:
-        AntiTask antiTask = new AntiTask();
-        antiTask.setName(name);
-        antiTask.setType(taskType);
-        antiTask.setStartTime(startTime);
-        antiTask.setDuration(duration);
-        antiTask.setStartDate(startDate);
-        schedule.applyAntiTask(antiTask);
-        return true;
-      default:
-        System.out.println("Invalid task identity.");
-        return false;
+    if (taskIdentity == Task.RECURRING_TASK) {
+      newTask = new TransientTask();
+    } else if (taskIdentity == Task.TRANSIENT_TASK) {
+      newTask = new RecurringTask();
+    } else {
+      newTask = new AntiTask();
     }
+
+    // Set common values.
     newTask.setName(name);
     newTask.setType(taskType);
     newTask.setStartTime(startTime);
     newTask.setDuration(duration);
     newTask.setStartDate(startDate);
+
+    // If recurring, set end date and frequency.
+    if (taskIdentity == Task.RECURRING_TASK) {
+      RecurringTask recurringNewTask = (RecurringTask) newTask;
+      recurringNewTask.setEndDate(endDate);
+      recurringNewTask.setFrequency(frequency);
+    }
+    
+    // WIP.
+
     return schedule.addTask(newTask);
   }
 
@@ -423,7 +419,7 @@ public class PSS {
   }
 
   /**
-   * Prints out all of the existing tasks.
+   * Option 4.2: prints out all of the existing tasks.
    */
   private static void displayTasks() {
     // For every task.
