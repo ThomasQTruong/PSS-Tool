@@ -149,6 +149,11 @@ public class RecurringTask implements Task {
    * @return HashSet(Integer) - the container for the dates.
    */
   public HashSet<Integer> getDates() {
+    // AntiTask doesnt exist, just use getDatesIgnoreAnti().
+    if (antiTask == null) {
+      return getDatesIgnoreAnti();
+    }
+
     HashSet<Integer> dates = new HashSet<>();
 
     // While the end date has not been reached.
@@ -189,6 +194,37 @@ public class RecurringTask implements Task {
   // Other methods.
   @Override
   public boolean isConflictingWith(Task otherTask) {
-    return otherTask.isConflictingWith(this);
+    // Checking itself.
+    if (this == otherTask) {
+      return false;
+    }
+
+    HashSet<Integer> thisTaskDates = getDates();
+
+    // otherTask is also a recurring task.
+    if (otherTask.getIdentity() == Task.RECURRING_TASK) {
+      HashSet<Integer> otherTaskDates = ((RecurringTask) otherTask).getDates();
+
+      // Check for same date.
+      boolean hasSameDate = false; 
+      for (int otherDate : otherTaskDates) {
+        if (thisTaskDates.contains(otherDate)) {
+          hasSameDate = true;
+          break;
+        }
+      }
+
+      // If they do not have same date, no confliction.
+      if (!hasSameDate) {
+        return false;
+      }
+    } else if (!thisTaskDates.contains(otherTask.getStartDate())) {
+      // Does not contain the same start date, no confliction.
+      return false;
+    }
+
+    // Since dates are the matching, check for overlapping time.
+    return DateAndTime.areTimesOverlapping(startTime, duration,
+                                           otherTask.getStartTime(), otherTask.getDuration());
   }
 }
