@@ -104,8 +104,7 @@ public class TransientTask implements Task {
     }
 
     // Since dates are the matching, check for overlapping time.
-    float otherEndTime = otherTask.getStartTime() + otherTask.getDuration();
-    return DateAndTime.areTimesOverlapping(startTime, startTime + duration,
-                                           otherTask.getStartTime(), otherEndTime);
+    return DateAndTime.areTimesOverlapping(startTime, duration,
+                                           otherTask.getStartTime(), otherTask.getDuration());
   }
 }
