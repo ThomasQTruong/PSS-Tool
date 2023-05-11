@@ -146,30 +146,7 @@ public class Schedule {
   }
 
 
-  // apply antiTask to listOfTask to remove recurring task from schedule
-  // when antiTask is entered through PSS class. --Brian Kang
-  public void applyAntiTask(AntiTask antiTask) {
-    List<Task> tasksToRemove = new ArrayList<>();
-    for (Task task : listOfTasks) {
-      if (task instanceof RecurringTask) {
-        RecurringTask recurringTask = (RecurringTask) task;
-        // check if recurring and antiTask overlap in schedule
-        if (antiTask.getStartDate() >= recurringTask.getStartDate()
-            && antiTask.getStartDate() <= recurringTask.getEndDate()
-            && (antiTask.getStartDate() - recurringTask.getStartDate())
-                % recurringTask.getFrequency() == 0
-            && antiTask.getStartTime() == recurringTask.getStartTime()
-            && antiTask.getDuration() == recurringTask.getDuration()
-            && antiTask.getName().equals(recurringTask.getName())) {
-          tasksToRemove.add(recurringTask);
-        }
-      }
-    }
-    for (Task taskToRemove : tasksToRemove) {
-      deleteTask(taskToRemove);
-    }
-  }
-
+ 
 
   /**
    * Deletes a task with a specific name.
