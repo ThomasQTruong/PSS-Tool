@@ -4,14 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
- * Placeholder javadoc.
+ * A schedule of tasks.
  */
 public class Schedule {
   static Gson GSON = new GsonBuilder()
@@ -37,6 +36,48 @@ public class Schedule {
    */
   public ArrayList<Task> getTasks() {
     return listOfTasks;
+  }
+
+  /**
+   * Creates a task with the given information.
+   *
+   * @param taskIdentity - the task identifier (recurring, transient, anti).
+   * @param name - the name of the task.
+   * @param taskType - the type of the task.
+   * @param startTime - the start time of the task.
+   * @param duration - the duration of the task.
+   * @param startDate - the start date of the task.
+   * @param endDate - the end date if it is a RECURRING task.
+   * @param frequency - the frequency if it is a RECURRING task.
+   * @return Task - the created task.
+   */
+  public Task createTask(int taskIdentity, String name, String taskType, float startTime,
+                         float duration, int startDate, int endDate, int frequency) {
+    // Create task based on identity.
+    Task newTask;
+    if (taskIdentity == Task.RECURRING_TASK) {
+      newTask = new RecurringTask();
+    } else if (taskIdentity == Task.TRANSIENT_TASK) {
+      newTask = new TransientTask();
+    } else {
+      newTask = new AntiTask();
+    }
+
+    // Set common values.
+    newTask.setName(name);
+    newTask.setType(taskType);
+    newTask.setStartTime(startTime);
+    newTask.setDuration(duration);
+    newTask.setStartDate(startDate);
+
+    // If recurring, set end date and frequency.
+    if (taskIdentity == Task.RECURRING_TASK) {
+      RecurringTask recurringNewTask = (RecurringTask) newTask;
+      recurringNewTask.setEndDate(endDate);
+      recurringNewTask.setFrequency(frequency);
+    }
+
+    return newTask;
   }
 
 
@@ -133,6 +174,209 @@ public class Schedule {
 
 
   /**
+   * Deletes a task with a specific name.
+   *
+   * @param taskName - the name of the task to delete.
+   * @return boolean - whether the deletion was successful or not.
+   */
+  public boolean deleteTaskByName(String taskName) {
+    Task taskToDelete = null;
+    for (Task task : listOfTasks) {
+      if (task.getName().equals(taskName)) {
+        taskToDelete = task;
+        break;
+      }
+    }
+    return deleteTask(taskToDelete);
+  }
+
+
+  /**
+   * Tries to edit the name of a task.
+   *
+   * @param task - the task to change name of.
+   * @param name - the name to change to.
+   * @return boolean - whether the operation was successful or not.
+   */
+  public boolean editTaskName(Task task, String name) {
+    // Name exists.
+    if (containsName(name)) {
+      return false;
+    }
+
+    task.setName(name);
+    return true;
+  }
+
+
+  /**
+   * Tries to edit the type of a task.
+   *
+   * @param task - the task to change type of.
+   * @param type - the type to change to.
+   * @return boolean - whether the operation was successful or not.
+   */
+  public boolean editTaskType(Task task, String type) {
+    // Check if the type exists for the respective task identities.
+    if (task.getIdentity() == Task.RECURRING_TASK) {
+      // Does not exist.
+      if (!RecurringTask.taskTypeExist(type)) {
+        return false;
+      }
+    } else if (task.getIdentity() == Task.TRANSIENT_TASK) {
+      if (!TransientTask.taskTypeExist(type)) {
+        return false;
+      }
+    } else if (task.getIdentity() == Task.ANTI_TASK) {
+      if (!AntiTask.taskTypeExist(type)) {
+        return false;
+      }
+    }
+
+    // Type exists; change to new type.
+    task.setType(type);
+    return true;
+  }
+
+  
+  /**
+   * Tries to edit the start time of a task.
+   *
+   * @param task - the task to edit.
+   * @param startTime - the new start time to change to.
+   * @return boolean - whether the edit was successful or not.
+   */
+  public boolean editTaskStartTime(Task task, float startTime) {
+    // Creates a copy of the original startTime.
+    float originalStartTime = task.getStartTime();
+
+    // Remove original task from list.
+    listOfTasks.remove(task);
+
+    // Edit task value.
+    task.setStartTime(startTime);
+
+    // New start time overlaps with something, revert back time.
+    if (!addTask(task)) {
+      task.setStartTime(originalStartTime);
+      sortTasks();
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   * Tries to edit the duration of a task.
+   *
+   * @param task - the task to edit.
+   * @param duration - the new duration to change to.
+   * @return boolean - whether the edit was successful or not.
+   */
+  public boolean editTaskDuration(Task task, float duration) {
+    // Creates a copy of the original duration.
+    float originalDuration = task.getDuration();
+
+    // Remove original task from list.
+    listOfTasks.remove(task);
+
+    // Edit task value.
+    task.setDuration(duration);
+
+    // New duration overlaps with something, revert back time. 
+    if (!addTask(task)) {
+      task.setDuration(originalDuration);
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   * Tries to edit the start date of a task.
+   *
+   * @param task - the task to edit.
+   * @param startDate - the new start date to change to.
+   * @return boolean - whether the edit was successful or not.
+   */
+  public boolean editTaskStartDate(Task task, int startDate) {
+    // Creates a copy of the original startDate.
+    int originalStartDate = task.getStartDate();
+
+    // Remove original task from list.
+    listOfTasks.remove(task);
+
+    // Edit task value.
+    task.setStartDate(startDate);
+
+    // New start date overlaps with something, revert back time. 
+    if (!addTask(task)) {
+      task.setStartDate(originalStartDate);
+      sortTasks();
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   * Tries to edit the end date of a recurring task.
+   *
+   * @param task - the task to edit.
+   * @param endDate - the new end date to change to.
+   * @return boolean - whether the edit was successful or not.
+   */
+  public boolean editTaskEndDate(RecurringTask task, int endDate) {
+    // Creates a copy of the original endDate.
+    int originalEndDate = task.getEndDate();
+
+    // Remove original task from list.
+    listOfTasks.remove(task);
+
+    // Edit task value.
+    task.setEndDate(endDate);
+
+    // New end date overlaps with something, revert back time.
+    if (!addTask(task)) {
+      task.setEndDate(originalEndDate);
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   * Tries to edit the frequency of a recurring task.
+   *
+   * @param task - the task to edit.
+   * @param frequency - the new frequency to change to.
+   * @return boolean - whether the edit was successful or not.
+   */
+  public boolean editTaskFrequency(RecurringTask task, int frequency) {
+    // Creates a copy of the original frequency.
+    int originalFrequency = task.getFrequency();
+
+    // Remove original task from list.
+    listOfTasks.remove(task);
+
+    // Edit task value.
+    task.setFrequency(frequency);
+
+    // New frequency overlaps with something, revert back time.
+    if (!addTask(task)) {
+      task.setFrequency(originalFrequency);
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
    * Checks if a task in listOfTasks contains the name.
    *
    * @param name - the name to check for.
@@ -213,23 +457,11 @@ public class Schedule {
 
 
   /**
-   * Deletes a task with a specific name.
+   * Saves the schedule as a JSON fole.
    *
-   * @param taskName - the name of the task to delete.
-   * @return boolean - whether the deletion was successful or not.
+   * @param location - the location/name to save the file as.
+   * @return boolean - whether the save was successful or not.
    */
-  public boolean deleteTaskByName(String taskName) {
-    Task taskToDelete = null;
-    for (Task task : listOfTasks) {
-      if (task.getName().equals(taskName)) {
-        taskToDelete = task;
-        break;
-      }
-    }
-    return deleteTask(taskToDelete);
-  }
-
-
   public boolean saveAsJson(String location) {
     return true;
   }
@@ -238,7 +470,7 @@ public class Schedule {
   /**
    * Loads tasks from a JSON file.
    *
-   * @param location - location of the json file.
+   * @param location - the location/name of the json file.
    * @return int - amount of successfully loaded tasks.
    */
   public int loadFromJson(String location) {
@@ -247,7 +479,7 @@ public class Schedule {
     // Try to open file.
     File jsonFile = new File(location);
     if (!jsonFile.exists()) {
-      return 0;
+      return -1;
     }
 
     try {

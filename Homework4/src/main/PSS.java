@@ -61,11 +61,22 @@ public class PSS {
           break;
         case 6:
           // Read the schedule from a file.
-          schedule.loadFromJson("../../test/Set1Scattered.json");
+          // FOR TESTING:
+          // schedule.loadFromJson("../../test/Set1Scattered.json");
+          int loadResult = loadFromFile();
+
+          // Failed to get file.
+          System.out.println();
+          if (loadResult == -1) {
+            System.out.println("[!!!] Failed to load file: could not find file.");
+          } else {
+            // Loaded tasks.
+            System.out.printf("[*] Successfully loaded %d tasks.\n", loadResult);
+          }
+          System.out.println();
           break;
         case 7:
           // View or write the schedule for one day.
-          schedule.sortTasks();
           break;
         case 8:
           // View or write the schedule for one week.
@@ -146,9 +157,10 @@ public class PSS {
       }
     }
 
-    // call enterTask() and add to schedule list 
-    return enterTask(taskIdentity, name, taskType, startTime,
-                     duration, startDate, endDate, frequency);
+    // Create the task and try to add it.
+    Task newTask = schedule.createTask(taskIdentity, name, taskType, startTime,
+                                       duration, startDate, endDate, frequency);
+    return schedule.addTask(newTask);
   }
 
   /**
@@ -205,49 +217,6 @@ public class PSS {
     System.out.println();
 
     return taskTypes[userOption - 1];
-  }
-
-  /**
-   * Option 1.4: Creates a task with the given information and inserts into the schedule.
-   *
-   * @param taskIdentity - the task identifier (recurring, transient, anti).
-   * @param name - the name of the task.
-   * @param taskType - the type of the task.
-   * @param startTime - the start time of the task.
-   * @param duration - the duration of the task.
-   * @param startDate - the start date of the task.
-   * @param endDate - the end date if it is a RECURRING task.
-   * @param frequency - the frequency if it is a RECURRING task.
-   * @return boolean - whether the task was entered successfully.
-   */
-  public static boolean enterTask(int taskIdentity, String name, String taskType, float startTime,
-                                  float duration, int startDate, int endDate, int frequency) {
-    // Create task based on identity.
-    Task newTask;
-    if (taskIdentity == Task.RECURRING_TASK) {
-      newTask = new RecurringTask();
-    } else if (taskIdentity == Task.TRANSIENT_TASK) {
-      newTask = new TransientTask();
-    } else {
-      newTask = new AntiTask();
-    }
-
-    // Set common values.
-    newTask.setName(name);
-    newTask.setType(taskType);
-    newTask.setStartTime(startTime);
-    newTask.setDuration(duration);
-    newTask.setStartDate(startDate);
-
-    // If recurring, set end date and frequency.
-    if (taskIdentity == Task.RECURRING_TASK) {
-      RecurringTask recurringNewTask = (RecurringTask) newTask;
-      recurringNewTask.setEndDate(endDate);
-      recurringNewTask.setFrequency(frequency);
-    }
-
-    // Try to create task.
-    return schedule.addTask(newTask);
   }
 
 
@@ -327,43 +296,25 @@ public class PSS {
       // 1: Edit name.
       String newName = ConsoleInput.getString("Enter the new name you would like.");
 
-      // Name exists.
-      if (schedule.containsName(newName)) {
-        return false;
-      }
-
-      taskToEdit.setName(newName);
+      return schedule.editTaskName(taskToEdit, newName);
     } else if (userOption == 2) {
       // 2: Edit type.
       System.out.println();
       String newType = getTaskType(taskToEdit.getIdentity());
-      taskToEdit.setType(newType);
+
+      return schedule.editTaskType(taskToEdit, newType);
     } else if (userOption == 3) {
       // 3: Edit start time.
       float startTime = ConsoleInput.getFloatRange("Enter the starting time of task [0 - 23.75].",
                                                0.0f, 23.75f);
-      float oldStartTime = taskToEdit.getStartTime();
-      taskToEdit.setStartTime(startTime);
 
-      // New time overlaps with another task.
-      if (schedule.reportOverlap(taskToEdit)) {
-        // Revert changes.
-        taskToEdit.setStartTime(oldStartTime);
-        return false;
-      }
+      return schedule.editTaskStartTime(taskToEdit, startTime);
     } else if (userOption == 4) {
       // 4: Edit duration.
       float duration = ConsoleInput.getFloatRange("Enter the duration of the task [0.25 - 23.75].",
                                                 0.25f, 23.75f);
-      float oldDuration = taskToEdit.getDuration();
-      taskToEdit.setDuration(duration);
-
-      // New duration overlaps with another task.
-      if (schedule.reportOverlap(taskToEdit)) {
-        // Revert changes.
-        taskToEdit.setDuration(oldDuration);
-        return false;
-      }
+      
+      return schedule.editTaskDuration(taskToEdit, duration);
     } else if (userOption == 5) {
       // 5: Edit start date.
       int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
@@ -373,16 +324,8 @@ public class PSS {
         startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
                                        10000000);
       }
-      // Save old start date incase overlap issue.
-      int oldDate = taskToEdit.getStartDate();
-      taskToEdit.setStartDate(startDate);
-      
-      // New date overlaps with another task.
-      if (schedule.reportOverlap(taskToEdit)) {
-        // Revert changes.
-        taskToEdit.setStartDate(oldDate);
-        return false;
-      }
+
+      return schedule.editTaskStartDate(taskToEdit, startDate);
     } else if (userOption == 6) {
       // 6: Edit end date.
       int endDate = ConsoleInput.getIntMin("Enter the end date of the task [YYYYMMDD].",
@@ -392,36 +335,19 @@ public class PSS {
         endDate = ConsoleInput.getIntMin("Invalid end date. Try again.",
                                          taskToEdit.getStartDate() + 1);
       }
-      // Save old end date incase overlap issue.
-      RecurringTask recurringTaskToEdit = (RecurringTask) taskToEdit;
-      int oldDate = recurringTaskToEdit.getEndDate();
-      recurringTaskToEdit.setEndDate(endDate);
       
-      // New date overlaps with another task.
-      if (schedule.reportOverlap(taskToEdit)) {
-        // Revert changes.
-        recurringTaskToEdit.setEndDate(oldDate);
-        return false;
-      }
+      return schedule.editTaskEndDate((RecurringTask) taskToEdit, endDate);
     } else if (userOption == 7) {
+      // 7: Edit frequency.
       int frequency = 0;
       while (frequency != 1 && frequency != 7) {
         frequency = ConsoleInput.getInt("Enter the task frequency [1 (daily) | 7 (weekly)].");
       }
-      // Get old frequency incase overlap.
-      RecurringTask recurringTaskToEdit = (RecurringTask) taskToEdit;
-      int oldFrequency = recurringTaskToEdit.getFrequency();
-      recurringTaskToEdit.setFrequency(frequency);
-
-      // New frequency overlaps with another task.
-      if (schedule.reportOverlap(taskToEdit)) {
-        // Revert changes.
-        recurringTaskToEdit.setFrequency(oldFrequency);
-        return false;
-      }
+      
+      return schedule.editTaskFrequency((RecurringTask) taskToEdit, frequency);
     }
 
-    return true;
+    return false;
   }
 
   /**
@@ -451,10 +377,10 @@ public class PSS {
 
 
   // Option 6.
-  private static boolean loadFromFile() {
+  private static int loadFromFile() {
     String fileName = ConsoleInput.getString("Enter the name of the file you want to load from.");
 
-    return true;
+    return schedule.loadFromJson(fileName);
   }
 
 
