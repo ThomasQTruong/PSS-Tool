@@ -251,16 +251,32 @@ public class Schedule {
         JsonObject task = taskArray.get(i).getAsJsonObject();
         Task newTask;
         
-        // Extract and check information.
+        // If Name does not exist, skip; otherwise get Name.
+        if (!task.has("Name")) {
+          continue;
+        }
         String taskName = task.get("Name").getAsString();
+
+        // If Type does not exist, skip; otherwise get Type.
+        if (!task.has("Type")) {
+          continue;
+        }
         String taskType = task.get("Type").getAsString();
 
+        // If StartTime does not exist, skip; otherwise get StartTime.
+        if (!task.has("StartTime")) {
+          continue;
+        }
         float taskStartTime = task.get("StartTime").getAsFloat();
         taskStartTime = DateAndTime.roundMinutesToNearest15(taskStartTime);
         if (taskStartTime < 0 || taskStartTime > 23.75) {
           continue;
         }
         
+        // If Duration does not exist, skip; otherwise get Duration.
+        if (!task.has("Duration")) {
+          continue;
+        }
         float taskDuration = task.get("Duration").getAsFloat();
         taskDuration = DateAndTime.roundMinutesToNearest15(taskDuration);
         if (taskDuration < 0.25 || taskDuration > 23.75) {
@@ -272,12 +288,26 @@ public class Schedule {
         int taskEndDate = 0;
         int taskFrequency = 0;
         if (RecurringTask.taskTypeExist(taskType)) {
+          // If StartDate does not exist, skip; otherwise get StartDate.
+          if (!task.has("StartDate")) {
+            continue;
+          }
           taskStartDate = task.get("StartDate").getAsInt();
           if (!DateAndTime.isValidYYYYMMDD(taskStartDate)) {
             continue;
           }
+
+          // If EndDate does not exist, skip; otherwise get EndDate.
+          if (!task.has("EndDate")) {
+            continue;
+          }
           taskEndDate = task.get("EndDate").getAsInt();
           if (!DateAndTime.isValidYYYYMMDD(taskEndDate)) {
+            continue;
+          }
+
+          // If Frequency does not exist, skip; otherwise get Frequency.
+          if (!task.has("Frequency")) {
             continue;
           }
           taskFrequency = task.get("Frequency").getAsInt();
@@ -291,6 +321,11 @@ public class Schedule {
         } else if (AntiTask.taskTypeExist(taskType)) {
           // Is an AntiTask.
           newTask = new AntiTask();
+
+          // If Date does not exist, skip; otherwise get Date.
+          if (!task.has("Date")) {
+            continue;
+          }
           taskStartDate = task.get("Date").getAsInt();
           if (!DateAndTime.isValidYYYYMMDD(taskStartDate)) {
             continue;
@@ -298,6 +333,11 @@ public class Schedule {
         } else if (TransientTask.taskTypeExist(taskType)) {
           // Is a transient task.
           newTask = new TransientTask();
+
+          // If Date does not exist, skip; otherwise get Date.
+          if (!task.has("Date")) {
+            continue;
+          }
           taskStartDate = task.get("Date").getAsInt();
           if (!DateAndTime.isValidYYYYMMDD(taskStartDate)) {
             continue;
