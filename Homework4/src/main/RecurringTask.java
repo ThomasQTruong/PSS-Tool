@@ -11,14 +11,45 @@ public class RecurringTask implements Task {
   public static final String[] TASK_TYPES = {"Class", "Study", "Sleep", "Exercise", "Work", "Meal"};
 
   // Fields.
-  private AntiTask antiTask = null;
-  private String name = "";
-  private String type = "";
-  private int startDate = 0;
-  private float startTime = 0;
-  private float duration = 0;
-  private int endDate = 0;
-  private int frequency = 0;
+  private AntiTask antiTask;
+  private String name;
+  private String type;
+  private int startDate;
+  private float startTime;
+  private float duration;
+  private int endDate;
+  private int frequency;
+
+
+  /**
+   * Default constructor.
+   */
+  public RecurringTask() {
+    this.antiTask = null;
+    this.name = "";
+    this.type = "";
+    this.startDate = 0;
+    this.startTime = 0;
+    this.duration = 0;
+    this.endDate = 0;
+    this.frequency = 0;
+  }
+
+  /**
+   * Copy Constructor: initializes with the data of another recurring task.
+   *
+   * @param task - the recurring task to copy data from.
+   */
+  public RecurringTask(RecurringTask task) {
+    this.antiTask = task.antiTask;
+    this.name = task.name;
+    this.type = task.type;
+    this.startDate = task.startDate;
+    this.startTime = task.startTime;
+    this.duration = task.duration;
+    this.endDate = task.endDate;
+    this.frequency = task.frequency;
+  }
 
 
   // Setter methods.

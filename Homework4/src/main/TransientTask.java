@@ -11,11 +11,36 @@ public class TransientTask implements Task {
   public static final String[] TASK_TYPES = {"Visit", "Shopping", "Appointment"};
 
   // Fields.
-  private String name = "";
-  private String type = "";
-  private int startDate = 0;
-  private float startTime = 0;
-  private float duration = 0;
+  private String name;
+  private String type;
+  private int startDate;
+  private float startTime;
+  private float duration;
+
+
+  /**
+   * Default constructor.
+   */
+  public TransientTask() {
+    name = "";
+    type = "";
+    startDate = 0;
+    startTime = 0;
+    duration = 0;
+  }
+
+  /**
+   * Copy Constructor: initializes with the data of another transient task.
+   *
+   * @param task - the transient task to copy data from.
+   */
+  public TransientTask(TransientTask task) {
+    this.name = task.name;
+    this.type = task.type;
+    this.startDate = task.startDate;
+    this.startTime = task.startTime;
+    this.duration = task.duration;
+  }
 
 
   // Setter methods.

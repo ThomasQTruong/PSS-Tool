@@ -11,12 +11,39 @@ public class AntiTask implements Task {
   public static final String[] TASK_TYPES = {"Cancellation"};
 
   // Fields.
-  private RecurringTask recurringTask = null;
-  private String name = "";
-  private String type = "";
-  private int startDate = 0;
-  private float startTime = 0;
-  private float duration = 0;
+  private RecurringTask recurringTask;
+  private String name;
+  private String type;
+  private int startDate;
+  private float startTime;
+  private float duration;
+
+
+  /**
+   * Default constructor.
+   */
+  public AntiTask() {
+    recurringTask = null;
+    name = "";
+    type = "";
+    startDate = 0;
+    startTime = 0;
+    duration = 0;
+  }
+
+  /**
+   * Copy Constructor: initializes with the data of another anti task.
+   *
+   * @param task - the anti task to copy data from.
+   */
+  public AntiTask(AntiTask task) {
+    this.recurringTask = task.recurringTask;
+    this.name = task.name;
+    this.type = task.type;
+    this.startDate = task.startDate;
+    this.startTime = task.startTime;
+    this.duration = task.duration;
+  }
 
 
   // Setter methods.
