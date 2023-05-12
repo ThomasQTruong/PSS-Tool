@@ -61,10 +61,11 @@ public class PSS {
           break;
         case 6:
           // Read the schedule from a file.
-          schedule.loadFromJson("../../test/Set1.json");
+          schedule.loadFromJson("../../test/Set1Scattered.json");
           break;
         case 7:
           // View or write the schedule for one day.
+          schedule.sortTasks();
           break;
         case 8:
           // View or write the schedule for one week.

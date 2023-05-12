@@ -3,23 +3,21 @@ package main;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Placeholder javadoc.
  */
 public class Schedule {
-  Gson GSON = new GsonBuilder()
-                  .disableHtmlEscaping()
-                  .setPrettyPrinting()
-                  .create();
+  static Gson GSON = new GsonBuilder()
+                         .disableHtmlEscaping()
+                         .setPrettyPrinting()
+                         .create();
 
   private ArrayList<Task> listOfTasks;
 
@@ -86,6 +84,9 @@ public class Schedule {
 
     // No overlap and name is free, add task.
     listOfTasks.add(newTask);
+
+    // Sort tasks.
+    sortTasks();
 
     return true;
   }
@@ -229,6 +230,11 @@ public class Schedule {
   }
 
 
+  public boolean saveAsJson(String location) {
+    return true;
+  }
+
+
   /**
    * Loads tasks from a JSON file.
    *
@@ -362,5 +368,13 @@ public class Schedule {
       throw new RuntimeException(e);
     }
     return numberOfSuccessfulLoads;
+  }
+
+  /**
+   * Sorts listOfTasks by startDate and startTime.
+   */
+  public void sortTasks() {
+    listOfTasks.sort(Comparator.comparingInt(Task::getStartDate)
+                               .thenComparingDouble(Task::getStartTime));
   }
 }
