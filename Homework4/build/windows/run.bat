@@ -5,6 +5,6 @@ call clean.bat
 call make.bat
 
 @ECHO Program starting...
-java -cp ../../bin/ main.PSS
+java -cp "../../lib/*:../../bin/" main.PSS
 
 pause
