@@ -1,10 +1,10 @@
 package main;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Placeholder javadoc.
+ * A personal scheduling system where the user
+ * could plan out tasks for specific times and dates.
  */
 public class PSS {
   private static Schedule schedule = new Schedule();
