@@ -60,8 +60,31 @@ public class Schedule {
     if (task == null || !listOfTasks.contains(task)) {
       return false;
     }
+    // Is an anti-task, must not overlap with anything else.
+    if (task.getIdentity() == Task.ANTI_TASK) {
+      ArrayList<Task> collisions = getCollisions(task);
+
+      for (Task collidedTask : collisions) {
+        // Cannot collide with a non-recurring task.
+        if (collidedTask.getIdentity() != Task.RECURRING_TASK) {
+          return false;
+        } else if (collidedTask != ((AntiTask) task).getRecurringTask()) {
+          // Not the linked recurring task! Still overlapping.
+          return false;
+        }
+      }
+      // Unlink the AntiTask from the RecurringTask.
+      ((AntiTask) task).getRecurringTask().setAntiTask(null);
+    } else if (task.getIdentity() == Task.RECURRING_TASK) {
+      // Is a recurring task, cannot be linked to a anti-task.
+      if (((RecurringTask) task).getAntiTask() != null) {
+        return false;
+      }
+    }
+
     // Task exists, remove from listOfTasks.
     listOfTasks.remove(task);
+    task = null;
     return true;
   }
 
