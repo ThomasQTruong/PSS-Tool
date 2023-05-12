@@ -221,6 +221,7 @@ public class PSS {
 
 
   // Option 2: NOT DONE, JUST TESTING OTHER FUNCTIONS.
+  // Not sure if we need to see Anti Tasks for Recurring Tasks, the slides don't specify.
   private static boolean viewTask() {
     String taskName = ConsoleInput.getString("Enter the name of the task you want to view:");
     Task task = schedule.getByName(taskName);
