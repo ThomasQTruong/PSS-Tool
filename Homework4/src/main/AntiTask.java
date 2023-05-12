@@ -3,7 +3,7 @@ package main;
 import java.util.HashSet;
 
 /**
- * Placeholder javadoc.
+ * A task that cancels out an occurance for a recurring task.
  */
 public class AntiTask implements Task {
   // Informational constants.

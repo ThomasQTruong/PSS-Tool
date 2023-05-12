@@ -3,7 +3,7 @@ package main;
 import java.util.HashSet;
 
 /**
- * Placeholder javadoc.
+ * A regular task that just happens once.
  */
 public class TransientTask implements Task {
   // Informational constants.

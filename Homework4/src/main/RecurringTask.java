@@ -3,7 +3,7 @@ package main;
 import java.util.HashSet;
 
 /**
- * Placeholder javadoc.
+ * A task that re-occurs daily or weekly until a certain date.
  */
 public class RecurringTask implements Task {
   // Informational constants.
