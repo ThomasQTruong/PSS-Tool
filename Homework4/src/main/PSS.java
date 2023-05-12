@@ -222,7 +222,9 @@ public class PSS {
 
   // Option 2: NOT DONE, JUST TESTING OTHER FUNCTIONS.
   private static boolean viewTask() {
-    for (Task task : schedule.getTasks()) {
+    String taskName = ConsoleInput.getString("Enter the name of the task you want to view:");
+    Task task = schedule.getByName(taskName);
+    if (task != null) {
       if (task.getIdentity() == Task.RECURRING_TASK) {
         RecurringTask recurringTask = (RecurringTask) task;
         System.out.printf("%s | %d | %d | %f | %f\n", task.getName(), task.getStartDate(),
@@ -232,6 +234,9 @@ public class PSS {
         System.out.printf("%s | %d | %f | %f\n", task.getName(), task.getStartDate(),
                                                task.getStartTime(), task.getDuration());
       }
+    }
+    else {
+      System.out.println("No task found with the given name.");
     }
     return true;
   }
