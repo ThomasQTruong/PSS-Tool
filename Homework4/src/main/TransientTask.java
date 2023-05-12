@@ -116,4 +116,19 @@ public class TransientTask implements Task {
     return DateAndTime.areTimesOverlapping(startTime, duration,
                                            otherTask.getStartTime(), otherTask.getDuration());
   }
+
+  /**
+   * Checks whether a task type exists in TASK_TYPES.
+   *
+   * @param taskType - the task type to check for.
+   * @return boolean - whether the type exists in TASK_TYPES or not.
+   */
+  public static boolean taskTypeExist(String taskType) {
+    for (int i = 0; i < TASK_TYPES.length; ++i) {
+      if (TASK_TYPES[i].equals(taskType)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

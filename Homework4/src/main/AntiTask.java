@@ -1,5 +1,7 @@
 package main;
 
+import java.util.HashSet;
+
 /**
  * Placeholder javadoc.
  */
@@ -118,6 +120,55 @@ public class AntiTask implements Task {
                                              otherTask.getStartTime(), otherTask.getDuration());
     }
     // Not an AntiTask, cannot conflict.
+    return false;
+  }
+  
+  
+  /**
+   * Checks if this task overlaps with the other task (unconflicting case).
+   *
+   * @param otherTask - the other task to check for overlap.
+   * @return boolean - whether it overlaps with any other task.
+   */
+  public boolean isOverlappingWith(Task otherTask) {
+    // Linked to this task, which is overlapping.
+    if (recurringTask == otherTask) {
+      return true;
+    }
+
+    // otherTask is not a recurring task.
+    if (otherTask.getIdentity() != Task.RECURRING_TASK) {
+      return DateAndTime.areTimesOverlapping(startTime, duration,
+                                             otherTask.getStartTime(), otherTask.getDuration());
+    } else {
+      // otherTask is a recurring task.
+      HashSet<Integer> otherTaskDates = ((RecurringTask) otherTask).getDates();
+
+      // For every start date.
+      for (int date : otherTaskDates) {
+        // Matching date.
+        if (date == startDate) {
+          return true;
+        }
+      }
+    }
+
+    // No overlaps.
+    return false;
+  }
+
+  /**
+   * Checks whether a task type exists in TASK_TYPES.
+   *
+   * @param taskType - the task type to check for.
+   * @return boolean - whether the type exists in TASK_TYPES or not.
+   */
+  public static boolean taskTypeExist(String taskType) {
+    for (int i = 0; i < TASK_TYPES.length; ++i) {
+      if (TASK_TYPES[i].equals(taskType)) {
+        return true;
+      }
+    }
     return false;
   }
 }
