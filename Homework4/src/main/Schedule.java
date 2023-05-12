@@ -1,14 +1,26 @@
 package main;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Placeholder javadoc.
  */
 public class Schedule {
+  Gson GSON = new GsonBuilder()
+                  .disableHtmlEscaping()
+                  .setPrettyPrinting()
+                  .create();
+
   private ArrayList<Task> listOfTasks;
 
 
@@ -33,17 +45,47 @@ public class Schedule {
   /**
    * Adds a task to listOfTasks if it is not overlapping.
    *
-   * @param task - the task to add.
+   * @param newTask - the task to add.
    * @return boolean - whether the task was successfully added or not.
    */
-  public boolean addTask(Task task) {
+  public boolean addTask(Task newTask) {
     // Task name already exists.
-    if (containsName(task.getName())) {
+    if (containsName(newTask.getName())) {
       return false;
     }
+    // Not an antitask and overlaps.
+    if (newTask.getIdentity() != Task.ANTI_TASK && reportOverlap(newTask)) {
+      return false;
+    } else if (newTask.getIdentity() == Task.ANTI_TASK) {
+      // newTask is an AntiTask.
+      AntiTask antiNewTask = (AntiTask) newTask;
 
-    // Name is free, add task.
-    listOfTasks.add(task);
+      // Get overlaps.
+      ArrayList<Task> collisions = getCollisions(newTask);
+      
+      // No overlap found, cannot make anti-task.
+      if (collisions.size() == 0)  {
+        return false;
+      }
+
+      // Overlap found, check if it collides with a Recurring task.
+      for (Task collidedTask : collisions) {
+        if (collidedTask.getIdentity() == Task.RECURRING_TASK) {
+          // Recurring task already has an anti task!
+          RecurringTask recurringCollided = (RecurringTask) collidedTask;
+          if (recurringCollided.getAntiTask() != null) {
+            return false;
+          } else {
+            // Does not have an anti-task yet, link them.
+            recurringCollided.setAntiTask(antiNewTask);
+            antiNewTask.setRecurringTask(recurringCollided);
+          }
+        }
+      }
+    }
+
+    // No overlap and name is free, add task.
+    listOfTasks.add(newTask);
 
     return true;
   }
@@ -159,7 +201,7 @@ public class Schedule {
       // Not itself.
       if (task != toCheck) {
         // Is conflicting.
-        if (task.isConflictingWith(toCheck)) {
+        if (((AntiTask) toCheck).isOverlappingWith(task)) {
           collisions.add(task);
         }
       }
@@ -168,8 +210,6 @@ public class Schedule {
     return collisions;
   }
 
-
- 
 
   /**
    * Deletes a task with a specific name.
@@ -192,10 +232,95 @@ public class Schedule {
   /**
    * Loads tasks from a JSON file.
    *
-   * @param json - the json to extract data from.
-   * @return boolean - whether loading was successful or not.
+   * @param location - location of the json file.
+   * @return int - amount of successfully loaded tasks.
    */
-  public boolean loadFromJson(JsonObject json) {
-    return true;
+  public int loadFromJson(String location) {
+    int numberOfSuccessfulLoads = 0;
+
+    // Try to open file.
+    File jsonFile = new File(location);
+    if (!jsonFile.exists()) {
+      return 0;
+    }
+
+    try {
+      JsonArray taskArray = GSON.fromJson(new FileReader(jsonFile), JsonArray.class);
+      // For every task in the json array.
+      for (int i = 0; i < taskArray.size(); ++i) {
+        JsonObject task = taskArray.get(i).getAsJsonObject();
+        Task newTask;
+        
+        // Extract and check information.
+        String taskName = task.get("Name").getAsString();
+        String taskType = task.get("Type").getAsString();
+
+        float taskStartTime = task.get("StartTime").getAsFloat();
+        taskStartTime = DateAndTime.roundMinutesToNearest15(taskStartTime);
+        if (taskStartTime < 0 || taskStartTime > 23.75) {
+          continue;
+        }
+        
+        float taskDuration = task.get("Duration").getAsFloat();
+        taskDuration = DateAndTime.roundMinutesToNearest15(taskDuration);
+        if (taskDuration < 0.25 || taskDuration > 23.75) {
+          continue;
+        }
+
+        // Create task/obtain additional information based on taskType.
+        int taskStartDate = 0;
+        int taskEndDate = 0;
+        int taskFrequency = 0;
+        if (RecurringTask.taskTypeExist(taskType)) {
+          taskStartDate = task.get("StartDate").getAsInt();
+          if (!DateAndTime.isValidYYYYMMDD(taskStartDate)) {
+            continue;
+          }
+          taskEndDate = task.get("EndDate").getAsInt();
+          if (!DateAndTime.isValidYYYYMMDD(taskEndDate)) {
+            continue;
+          }
+          taskFrequency = task.get("Frequency").getAsInt();
+          if (taskFrequency != 1 && taskFrequency != 7) {
+            continue;
+          }
+
+          newTask = new RecurringTask();
+          ((RecurringTask) newTask).setEndDate(taskEndDate);
+          ((RecurringTask) newTask).setFrequency(taskFrequency);
+        } else if (AntiTask.taskTypeExist(taskType)) {
+          // Is an AntiTask.
+          newTask = new AntiTask();
+          taskStartDate = task.get("Date").getAsInt();
+          if (!DateAndTime.isValidYYYYMMDD(taskStartDate)) {
+            continue;
+          }
+        } else if (TransientTask.taskTypeExist(taskType)) {
+          // Is a transient task.
+          newTask = new TransientTask();
+          taskStartDate = task.get("Date").getAsInt();
+          if (!DateAndTime.isValidYYYYMMDD(taskStartDate)) {
+            continue;
+          }
+        } else {
+          // Task type is incorrect.
+          continue;
+        }
+
+        // Set common values of the tasks.
+        newTask.setName(taskName);
+        newTask.setType(taskType);
+        newTask.setStartTime(taskStartTime);
+        newTask.setDuration(taskDuration);
+        newTask.setStartDate(taskStartDate);
+
+        if (addTask(newTask)) {
+          ++numberOfSuccessfulLoads;
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return numberOfSuccessfulLoads;
   }
 }
