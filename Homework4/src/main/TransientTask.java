@@ -102,8 +102,18 @@ public class TransientTask implements Task {
   }
 
   @Override
+  public int getStartTimeAsInt() {
+    return DateAndTime.floatToInt(startTime);
+  }
+
+  @Override
   public float getDuration() {
     return duration;
+  }
+
+  @Override
+  public int getDurationAsInt() {
+    return DateAndTime.floatToInt(duration);
   }
 
   @Override

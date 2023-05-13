@@ -91,11 +91,25 @@ public interface Task {
   public float getStartTime();
 
   /**
+   * Retrieves the start time as an int.
+   *
+   * @return int - the start time.
+   */
+  public int getStartTimeAsInt();
+
+  /**
    * Retrieves the duration.
    *
    * @return float - the duration.
    */
   public float getDuration();
+
+  /**
+   * Retrieves the duration as an int.
+   *
+   * @return int - the duration.
+   */
+  public int getDurationAsInt();
 
   /**
    * Retrieves the start date.
