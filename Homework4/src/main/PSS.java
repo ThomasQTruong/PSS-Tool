@@ -40,7 +40,7 @@ public class PSS {
           break;
         case 2:
           // View a task.
-          if (!viewATaskOrSchedule()) {
+          if (!viewTaskOrSchedule()) {
             System.out.println();
             System.out.println("[!!!] Failed to view task: task does not exist.");
           }
@@ -102,6 +102,9 @@ public class PSS {
             System.out.println();
             System.out.println("[!!!] Failed to write schedule: something went wrong.");
           }
+          break;
+        default:
+          // Some how got out of range?
           break;
       }
       System.out.println();
@@ -245,7 +248,7 @@ public class PSS {
    *
    * @return boolean - whether the task/schedule was viewed successfully or not.
    */
-  private static boolean viewATaskOrSchedule() {
+  private static boolean viewTaskOrSchedule() {
     // Get user's view choice.
     int viewChoice = getViewChoice();
     
@@ -303,7 +306,8 @@ public class PSS {
       RecurringTask recurringTask = (RecurringTask) task;
 
       System.out.printf("%14s | %14s | %10s | %8s | %9s | %s\n",
-                        "Start Date", "End Date", "Start Time", "Duration", "Frequency", "Anti-Task Linked");
+                        "Start Date", "End Date", "Start Time", "Duration",
+                        "Frequency", "Anti-Task Linked");
       System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(task.getStartDate()));
       System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(recurringTask.getEndDate()));
       System.out.printf("%10s | ", DateAndTime.timeToString(task.getStartTime()));
@@ -490,7 +494,7 @@ public class PSS {
 
   /**
    * Option 5: Lets the user save the schedule to a file.
-   * 
+   *
    * @return boolean - whether the save was successful or not.
    */
   private static boolean saveToFile() {
@@ -608,7 +612,7 @@ public class PSS {
 
 
   /**
-   * Option 8: Lets the user view or write a schedule for one month.
+   * Option 9: Lets the user view or write a schedule for one month.
    * Assuming one month is 30 days.
    *
    * @return boolean - whether the write was successful.
