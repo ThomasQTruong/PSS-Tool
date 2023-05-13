@@ -508,9 +508,10 @@ public class Schedule {
    * Saves the schedule as a JSON fole.
    *
    * @param location - the location/name to save the file as.
+   * @param scheduleToSave - the schedule to save to a file.
    * @return boolean - whether the save was successful or not.
    */
-  public boolean saveAsJson(String location) {
+  public boolean saveAsJson(String location, ArrayList<Task> scheduleToSave) {
     // Open file if exists, otherwise create file.
     File jsonFile = new File(location);
     try {
@@ -520,7 +521,7 @@ public class Schedule {
 
       jsonWriter.beginArray();
       // For every task.
-      for (Task task : getTasks()) {
+      for (Task task : scheduleToSave) {
         // Write information.
         jsonWriter.beginObject()
                     .name("Name")
