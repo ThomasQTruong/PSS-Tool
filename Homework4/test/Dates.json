@@ -1,0 +1,90 @@
+[
+  {
+    "Name" : "Task 1",
+    "Type" : "Appointment",
+    "Date" : 20240128,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 2",
+    "Type" : "Appointment",
+    "Date" : 20240228,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 3",
+    "Type" : "Appointment",
+    "Date" : 20240328,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 4",
+    "Type" : "Appointment",
+    "Date" : 20240428,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 5",
+    "Type" : "Class",
+    "StartDate" : 20240502,
+    "StartTime" : 19,
+    "Duration" : 1.25,
+    "EndDate" : 20240530,
+    "Frequency" : 7
+  },
+  {
+    "Name" : "Task 6",
+    "Type" : "Appointment",
+    "Date" : 20240628,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 7",
+    "Type" : "Appointment",
+    "Date" : 20240728,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 8",
+    "Type" : "Appointment",
+    "Date" : 20240828,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 9",
+    "Type" : "Appointment",
+    "Date" : 20240928,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 10",
+    "Type" : "Class",
+    "StartDate" : 20241002,
+    "StartTime" : 19,
+    "Duration" : 1.25,
+    "EndDate" : 20241020,
+    "Frequency" : 1
+  },
+  {
+    "Name" : "Task 11",
+    "Type" : "Appointment",
+    "Date" : 20241128,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  },
+  {
+    "Name" : "Task 12",
+    "Type" : "Appointment",
+    "Date" : 20241228,
+    "StartTime" : 17,
+    "Duration" : 2.5
+  }
+]
