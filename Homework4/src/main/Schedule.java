@@ -115,7 +115,16 @@ public class Schedule {
           if (recurringCollided.getAntiTask() != null) {
             return false;
           } else {
-            // Does not have an anti-task yet, link them.
+            // If the start times do not match, cannot link.
+            if (recurringCollided.getStartTimeAsInt() != antiNewTask.getStartTimeAsInt()) {
+              return false;
+            }
+            // If the durations do not match, cannot link.
+            if (recurringCollided.getDurationAsInt() != antiNewTask.getDurationAsInt()) {
+              return false;
+            }
+            
+            // Start time and duration match and does not have an anti-task yet, link.
             recurringCollided.setAntiTask(antiNewTask);
             antiNewTask.setRecurringTask(recurringCollided);
           }
