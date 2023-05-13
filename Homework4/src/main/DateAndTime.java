@@ -603,6 +603,32 @@ public class DateAndTime {
     }
     
     return "";
+  }
 
+
+  /**
+   * Gets the dates in a range, includes start and end.
+   *
+   * @param startDate - the starting range date.
+   * @param endDate - the ending range date.
+   * @return HashSet(Integer) - the dates in the range.
+   */
+  public static HashSet<Integer> getDatesInRange(int startDate, int endDate) {
+    HashSet<Integer> datesInRange = new HashSet<>();
+
+    // Start date cannot be greater than end date.
+    if (startDate > endDate) {
+      return datesInRange;
+    }
+
+    // While the end date has not been reached.
+    int currentDate = startDate;
+    while (currentDate <= endDate) {
+      datesInRange.add(currentDate);
+      // Increase day by one.
+      currentDate = increaseDayForYYYYMMDD(currentDate);
+    }
+
+    return datesInRange;
   }
 }

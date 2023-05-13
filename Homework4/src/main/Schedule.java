@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 
 /**
  * A schedule of tasks.
@@ -39,6 +40,41 @@ public class Schedule {
    */
   public ArrayList<Task> getTasks() {
     return listOfTasks;
+  }
+
+  /**
+   * Retrieves the list of tasks in a date range.
+   *
+   * @return ArrayList(Task) - the list of tasks.
+   */
+  public ArrayList<Task> getTasksInRange(int startDate, int endDate) {
+    ArrayList<Task> tasksInRange = new ArrayList<Task>();
+    HashSet<Integer> datesInRange = DateAndTime.getDatesInRange(startDate, endDate);
+
+    // For every task.
+    for (Task task : getTasks()) {
+      // Is a recurring task.
+      if (task.getIdentity() == Task.RECURRING_TASK) {
+        // Get all dates.
+        HashSet<Integer> taskDates = ((RecurringTask) task).getDates();
+
+        // For every date in recurring task.
+        for (int date : taskDates) {
+          // If the date is in range, add to tasksInRange.
+          if (datesInRange.contains(date)) {
+            tasksInRange.add(task);
+            break;
+          }
+        }
+      } else {
+        // Not recurring task: if the start date is in range, add to tasksInRange.
+        if (datesInRange.contains(task.getStartDate())) {
+          tasksInRange.add(task);
+        }
+      }
+    }
+
+    return tasksInRange;
   }
 
   /**
