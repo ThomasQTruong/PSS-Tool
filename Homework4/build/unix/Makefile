@@ -23,4 +23,4 @@ run:
 
 # Creates and runs the unit test.
 test:
-	make clean && make && java -cp "../../lib/*:../../bin/" test.TestDateAndTime
+	make clean && make && java -cp "../../lib/*:../../bin/" test.TestSchedule
