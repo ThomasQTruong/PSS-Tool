@@ -118,7 +118,7 @@ public class PSS {
   /**
    * Prints the operations menu.
    */
-  public static void printMenu() {
+  private static void printMenu() {
     System.out.println("=Operations Menu=");
     System.out.println("[1] Create a task");
     System.out.println("[2] View a task");
