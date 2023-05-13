@@ -9,6 +9,12 @@ import java.lang.Math;
  */
 public class DateAndTime {
   public static final int[] DAYS_IN_MONTHS = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  public static final String[] monthNames = {"January", "February", "March", "April",
+                                             "May", "June", "July", "August",
+                                             "September", "October", "November", "December"};
+  public static final String[] shortMonthNames = {"Jan.", "Feb.", "March", "April",
+                                                  "May", "June", "July", "Aug.",
+                                                  "Sept.", "Oct.", "Nov.", "Dec."};
 
   /**
    * Rounds the minutes in the time to the nearest 15 minutes.
@@ -22,8 +28,8 @@ public class DateAndTime {
       return toRound;
     }
 
-    // Safer float arithmetic compared to (int) (toRound % 1 * 100).
-    int minutes = (int) (toRound * 100) - (int) (toRound) * 100;
+    // Extract the minutes.
+    int minutes = floatToInt(toRound) % 100;
     // ((Round down to nearest 25)) + 25.
     minutes = ((minutes / 25) * 25) + 25;
     
@@ -490,10 +496,10 @@ public class DateAndTime {
   public static boolean areTimesOverlapping(float startTime1, float duration1,
                                             float startTime2, float duration2) {
     // Convert to int to try to minimize floating arithmetic errors.
-    int start1 = (int) Math.round(startTime1 * 100);
-    int end1 = start1 + (int) Math.round(duration1 * 100);
-    int start2 = (int) Math.round(startTime2 * 100);
-    int end2 = start2 + (int) Math.round(duration2 * 100);
+    int start1 = floatToInt(startTime1);
+    int end1 = start1 + floatToInt(duration1);
+    int start2 = floatToInt(startTime2);
+    int end2 = start2 + floatToInt(duration2);
 
     // Get the possible times for the ranges (15 minute intervals).
     // End times are excluded.
@@ -516,5 +522,87 @@ public class DateAndTime {
 
     // Does not overlap.
     return false;
+  }
+
+  
+  /**
+   * Converts a float to int.
+   *
+   * @param toConvert - the float to convert to int.
+   * @return int - the converted float.
+   */
+  public static int floatToInt(float toConvert) {
+    return (int) Math.round(toConvert * 100);
+  }
+
+
+  /**
+   * Converts YYYYMMDD formated date to a String.
+   *
+   * @param date - the formatted date to convert.
+   * @return String - the String version of the date.
+   */
+  public static String YYYYMMDDToString(int date) {
+    int year = getYearFromYYYYMMDD(date);
+    int month = getMonthFromYYYYMMDD(date);
+    int day = getDayFromYYYYMMDD(date);
+
+    return String.format("%s %d, %d", shortMonthNames[month - 1], day, year);
+  }
+
+
+  /**
+   * Converts a time into a String.
+   *
+   * @param time - the time to convert.
+   * @return String - the String version of the time.
+   */
+  public static String timeToString(float time) {
+    int timeAsInt = floatToInt(time);
+    int hours = timeAsInt / 100;
+    int minutes = timeAsInt % 100;
+    
+    // Compile time.
+    String converted = hours + ":";
+
+    if (minutes == 0) {  // Minutes is 0, insert two 0s.
+      converted += "00";
+    } else {
+      converted += minutes;
+    }
+
+    // Before noon.
+    if (hours < 12) {
+      converted += " AM";
+    } else {
+      converted += " PM";
+    }
+
+    return converted;
+  }
+
+
+  /**
+   * Converts a duration into a String.
+   *
+   * @param duration - the duration to convert.
+   * @return String - the String version of the duration.
+   */
+  public static String durationToString(float duration) {
+    int durationAsInt = floatToInt(duration);
+    int hours = durationAsInt / 100;
+    int minutes = durationAsInt % 100;
+
+    // Return String based on what time exists.
+    if (hours != 0 && minutes != 0) {
+      return hours + "h " + minutes + "m";
+    } else if (hours != 0) {
+      return hours + "h";
+    } else if (minutes != 0) {
+      return minutes + "m";
+    }
+    
+    return "";
+
   }
 }
