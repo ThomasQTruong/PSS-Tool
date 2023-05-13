@@ -54,16 +54,22 @@ public class PSS {
         case 4:
           // Edit a task.
           if (!editTask()) {
+            System.out.println();
             System.out.println("[!!!] Failed to edit task: name or overlapping issue.");
           }
           break;
         case 5:
           // Write the schedule to a file.
+          if (!saveToFile()) {
+            System.out.println();
+            System.out.println("[!!!] Failed to save file: something went wrong.");
+          } else {
+            System.out.println();
+            System.out.println("[*] File saved successfully.");
+          }
           break;
         case 6:
           // Read the schedule from a file.
-          // FOR TESTING:
-          // schedule.loadFromJson("../../test/Set1Scattered.json");
           int loadResult = loadFromFile();
 
           // Failed to get file.
@@ -448,7 +454,7 @@ public class PSS {
   private static boolean saveToFile() {
     String fileName = ConsoleInput.getString("Enter the name you want the file to be saved as.");
 
-    return true;
+    return schedule.saveAsJson(fileName);
   }
 
 

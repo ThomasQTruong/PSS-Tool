@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -472,6 +475,45 @@ public class Schedule {
    * @return boolean - whether the save was successful or not.
    */
   public boolean saveAsJson(String location) {
+    // Open file if exists, otherwise create file.
+    File jsonFile = new File(location);
+    try {
+      // Create new file if possible.
+      jsonFile.createNewFile();
+      JsonWriter jsonWriter = GSON.newJsonWriter(new FileWriter(jsonFile));
+
+      jsonWriter.beginArray();
+      // For every task.
+      for (Task task : getTasks()) {
+        // Write information.
+        jsonWriter.beginObject()
+                    .name("Name")
+                      .value(task.getName())
+                    .name("Type")
+                      .value(task.getType())
+                    // If task is recurring, name = StartDate, otherwise, name = Date.
+                    .name((task.getIdentity() == Task.RECURRING_TASK) ? "StartDate" : "Date")
+                      .value(task.getStartDate())
+                    .name("StartTime")
+                      .value(String.format("%.2f", task.getStartTime()))
+                    .name("Duration")
+                      .value(String.format("%.2f", task.getDuration()));
+        
+        // If recurring task, write end date and frequency too.
+        if (task.getIdentity() == Task.RECURRING_TASK) {
+          jsonWriter.name("EndDate")
+                    .value(((RecurringTask) task).getEndDate())
+                  .name("Frequency")
+                    .value(((RecurringTask) task).getFrequency());
+        }
+        jsonWriter.endObject();
+      }
+      jsonWriter.endArray();
+      jsonWriter.flush();
+    } catch (IOException e) {
+      return false;
+    }
+
     return true;
   }
 
@@ -605,7 +647,7 @@ public class Schedule {
           ++numberOfSuccessfulLoads;
         }
       }
-    } catch (Exception e) {
+    } catch (IOException e) {
       throw new RuntimeException(e);
     }
     return numberOfSuccessfulLoads;
@@ -616,6 +658,6 @@ public class Schedule {
    */
   public void sortTasks() {
     listOfTasks.sort(Comparator.comparingInt(Task::getStartDate)
-                               .thenComparingDouble(Task::getStartTime));
+                               .thenComparingDouble(Task::getStartTimeAsInt));
   }
 }
