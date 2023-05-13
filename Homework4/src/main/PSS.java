@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -83,12 +84,24 @@ public class PSS {
           break;
         case 7:
           // View or write the schedule for one day.
+          if (!viewOrWriteForOneDay()) {
+            System.out.println();
+            System.out.println("[!!!] Failed to write schedule: something went wrong.");
+          }
           break;
         case 8:
           // View or write the schedule for one week.
+          if (!viewOrWriteForOneWeek()) {
+            System.out.println();
+            System.out.println("[!!!] Failed to write schedule: something went wrong.");
+          }
           break;
         case 9:
           // View or write the schedule for one month.
+          if (!viewOrWriteForOneMonth()) {
+            System.out.println();
+            System.out.println("[!!!] Failed to write schedule: something went wrong.");
+          }
           break;
       }
       System.out.println();
@@ -249,19 +262,27 @@ public class PSS {
 
       return displayTaskInfo(task);
     } else if (viewChoice == 2) {
-      System.out.println("-Schedule-");
-      Iterator<Task> taskIterator = schedule.getTasks().iterator();
-      while (taskIterator.hasNext()) {
-        displayTaskInfo(taskIterator.next());
-        if (taskIterator.hasNext()) {
-          System.out.println();
-        }
-      }
+      displaySchedule(schedule.getTasks());
       return true;
     }
     return true;
   }
 
+  /**
+   * Displays a schedule.
+   *
+   * @param scheduleToView - the schedule to display.
+   */
+  private static void displaySchedule(ArrayList<Task> scheduleToView) {
+    System.out.println("-Schedule-");
+    Iterator<Task> taskIterator = scheduleToView.iterator();
+    while (taskIterator.hasNext()) {
+      displayTaskInfo(taskIterator.next());
+      if (taskIterator.hasNext()) {
+        System.out.println();
+      }
+    }
+  }
 
   /**
    * Option 2.2: Displays information of the given task.
@@ -281,25 +302,42 @@ public class PSS {
     if (task.getIdentity() == Task.RECURRING_TASK) {
       RecurringTask recurringTask = (RecurringTask) task;
 
-      System.out.printf("%14s | %14s | %10s | %8s | %9s\n",
-                        "Start Date", "End Date", "Start Time", "Duration", "Frequency");
+      System.out.printf("%14s | %14s | %10s | %8s | %9s | %s\n",
+                        "Start Date", "End Date", "Start Time", "Duration", "Frequency", "Anti-Task Linked");
       System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(task.getStartDate()));
       System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(recurringTask.getEndDate()));
-      System.out.printf("%10s | ",  DateAndTime.timeToString(task.getStartTime()));
+      System.out.printf("%10s | ", DateAndTime.timeToString(task.getStartTime()));
       System.out.printf("%8s | ",  DateAndTime.durationToString(task.getDuration()));
-      System.out.printf("%9s",     recurringTask.getFrequency());
+      System.out.printf("%9s | ",  recurringTask.getFrequency());
+      // Print AntiTask name if exists.
+      if (recurringTask.getAntiTask() != null) {
+        System.out.printf("%s",   recurringTask.getAntiTask().getName());
+      } else {
+        System.out.printf("%s",   "");
+      }
+    } else if (task.getIdentity() == Task.ANTI_TASK) {
+      System.out.printf("%14s | %10s | %8s | %s\n",
+                        "Start Date", "Start Time", "Duration", "Recurring Task Linked");
+      System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(task.getStartDate()));
+      System.out.printf("%10s | ", DateAndTime.timeToString(task.getStartTime()));
+      System.out.printf("%8s | ",     DateAndTime.durationToString(task.getDuration()));
+      // Print RecurringTask name if exists.
+      if (((AntiTask) task).getRecurringTask() != null) {
+        System.out.printf("%s",      ((AntiTask) task).getRecurringTask().getName());
+      } else {
+        System.out.printf("%s",   "");
+      }
     } else {
       System.out.printf("%14s | %10s | %8s\n",
                         "Start Date", "Start Time", "Duration");
       System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(task.getStartDate()));
-      System.out.printf("%10s | ",  DateAndTime.timeToString(task.getStartTime()));
+      System.out.printf("%10s | ", DateAndTime.timeToString(task.getStartTime()));
       System.out.printf("%8s",     DateAndTime.durationToString(task.getDuration()));
     }
     System.out.println();
 
     return true;
   }
-
 
   /**
    * Option 2.3: Asks the user for what they want to view.
@@ -450,15 +488,23 @@ public class PSS {
   }
 
 
-  // Option 5.
+  /**
+   * Option 5: Lets the user save the schedule to a file.
+   * 
+   * @return boolean - whether the save was successful or not.
+   */
   private static boolean saveToFile() {
     String fileName = ConsoleInput.getString("Enter the name you want the file to be saved as.");
 
-    return schedule.saveAsJson(fileName);
+    return schedule.saveAsJson(fileName, schedule.getTasks());
   }
 
 
-  // Option 6.
+  /**
+   * Option 6: Lets the user load a schedule from a file.
+   *
+   * @return int - amount of successful tasks loaded (-1 = cant find file).
+   */
   private static int loadFromFile() {
     String fileName = ConsoleInput.getString("Enter the name of the file you want to load from.");
 
@@ -466,20 +512,139 @@ public class PSS {
   }
 
 
-  // Option 7 (???).
+  /**
+   * Option 7.1: Lets the user view or write a schedule for one day.
+   *
+   * @return boolean - whether the write was successful.
+   */
   private static boolean viewOrWriteForOneDay() {
+    int viewOrWrite = getViewOrWrite();
+    // Cancelled.
+    if (viewOrWrite == 0) {
+      return true;
+    }
+
+    // Get start date.
+    System.out.println();
+    int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
+                                       10000000);
+    // Invalid startDate, keep asking for a valid one.
+    while (!DateAndTime.isValidYYYYMMDD(startDate)) {
+      startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
+                                         10000000);
+    }
+
+    // Get tasks at date.
+    ArrayList<Task> tasksInRange = schedule.getTasksInRange(startDate, startDate);
+
+    if (viewOrWrite == 1) {
+      // View.
+      System.out.println();
+      displaySchedule(tasksInRange);
+    } else if (viewOrWrite == 2) {
+      // Write.
+      String fileName = ConsoleInput.getString("Enter the name you want the file to be saved as.");
+
+      return schedule.saveAsJson(fileName, tasksInRange);
+    }
+
     return true;
   }
 
+  /**
+   * Option 7.2: Asks the user whether they want to view or write the schedule.
+   *
+   * @return int - the user's view/write choice.
+   */
+  private static int getViewOrWrite() {
+    System.out.println("=View or Write=");
+    System.out.println("[1] View");
+    System.out.println("[2] Write");
+    System.out.println("[0] Cancel");
 
-  // Option 8 (???).
+    return ConsoleInput.getIntRange("Would you like to view or write?", 0, 2);
+  }
+
+
+  /**
+   * Option 8: Lets the user view or write a schedule for one week.
+   *
+   * @return boolean - whether the write was successful.
+   */
   private static boolean viewOrWriteForOneWeek() {
+    int viewOrWrite = getViewOrWrite();
+    // Cancelled.
+    if (viewOrWrite == 0) {
+      return true;
+    }
+
+    // Get start date.
+    System.out.println();
+    int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
+                                       10000000);
+    // Invalid startDate, keep asking for a valid one.
+    while (!DateAndTime.isValidYYYYMMDD(startDate)) {
+      startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
+                                         10000000);
+    }
+
+    // Get tasks in date range.
+    ArrayList<Task> tasksInRange = schedule.getTasksInRange(startDate,
+                                DateAndTime.increaseDayForYYYYMMDD(startDate, 7));
+
+    if (viewOrWrite == 1) {
+      // View.
+      System.out.println();
+      displaySchedule(tasksInRange);
+    } else if (viewOrWrite == 2) {
+      // Write.
+      String fileName = ConsoleInput.getString("Enter the name you want the file to be saved as.");
+
+      return schedule.saveAsJson(fileName, tasksInRange);
+    }
+
     return true;
   }
 
 
-  // Option 9 (???).
+  /**
+   * Option 8: Lets the user view or write a schedule for one month.
+   * Assuming one month is 30 days.
+   *
+   * @return boolean - whether the write was successful.
+   */
   private static boolean viewOrWriteForOneMonth() {
+    int viewOrWrite = getViewOrWrite();
+    // Cancelled.
+    if (viewOrWrite == 0) {
+      return true;
+    }
+
+    // Get start date.
+    System.out.println();
+    int startDate = ConsoleInput.getIntMin("Enter the start date of the task [YYYYMMDD].",
+                                       10000000);
+    // Invalid startDate, keep asking for a valid one.
+    while (!DateAndTime.isValidYYYYMMDD(startDate)) {
+      startDate = ConsoleInput.getIntMin("Invalid start date. Try again.",
+                                         10000000);
+    }
+
+    // Get tasks in date range.
+    ArrayList<Task> tasksInRange = schedule.getTasksInRange(startDate,
+                                DateAndTime.increaseDayForYYYYMMDD(startDate, 30));
+
+    if (viewOrWrite == 1) {
+      // View.
+      System.out.println();
+      displaySchedule(tasksInRange);
+    } else if (viewOrWrite == 2) {
+      // Write.
+      String fileName = ConsoleInput.getString("Enter the name you want the file to be saved as.");
+
+      return schedule.saveAsJson(fileName, tasksInRange);
+    }
+
     return true;
   }
 }
