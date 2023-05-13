@@ -29,18 +29,20 @@ public class PSS {
         case 0:
           // Exit program.
           System.out.println("Good bye!");
-          break;
+          return;
         case 1:
           // Create a task.
           if (!createTask()) {  // Failed to create.
             System.out.println();
             System.out.println("[!!!] Failed to create task: name exists or time conflict.");
           }
-          System.out.println();
           break;
         case 2:
           // View a task.
-          viewTask();
+          if (!viewATaskOrSchedule()) {
+            System.out.println();
+            System.out.println("[!!!] Failed to view task: task does not exist.");
+          }
           break;
         case 3:
           // Delete a task.
@@ -48,7 +50,6 @@ public class PSS {
             System.out.println();
             System.out.println("[!!!] Failed to delete task: task does not exist.");
           }
-          System.out.println();
           break;
         case 4:
           // Edit a task.
@@ -73,7 +74,6 @@ public class PSS {
             // Loaded tasks.
             System.out.printf("[*] Successfully loaded %d tasks.\n", loadResult);
           }
-          System.out.println();
           break;
         case 7:
           // View or write the schedule for one day.
@@ -85,6 +85,7 @@ public class PSS {
           // View or write the schedule for one month.
           break;
       }
+      System.out.println();
     } while (userInput != 0);
 
     // Close scanners.
@@ -120,7 +121,7 @@ public class PSS {
     int taskIdentity = getTaskIdentity();
 
     // Obtain common task values.
-    System.out.println("=Task Setup=");
+    System.out.println("-Task Setup-");
     String name = ConsoleInput.getString("Enter a name for the task.");
     System.out.println();
 
@@ -169,7 +170,7 @@ public class PSS {
    * @return int - the identifier of the task (recurring, transient, anti).
    */
   private static int getTaskIdentity() {
-    System.out.println("-Task Identifier-");
+    System.out.println("=Task Identifier=");
     System.out.println("[1] Recurring Task");
     System.out.println("[2] Transient Task");
     System.out.println("[3] Anti-Task");
@@ -209,7 +210,7 @@ public class PSS {
 
     // Multiple options, list and get user's choice.
     String[] taskTypes = taskType.getTypes();
-    System.out.println("-Task Types-");
+    System.out.println("=Task Types=");
     for (int i = 0; i < amountOfOptions; ++i) {
       System.out.printf("[%d] %s\n", i + 1, taskTypes[i]);
     }
@@ -220,26 +221,95 @@ public class PSS {
   }
 
 
-  // Option 2: NOT DONE, JUST TESTING OTHER FUNCTIONS.
-  // Not sure if we need to see Anti Tasks for Recurring Tasks, the slides don't specify.
-  private static boolean viewTask() {
-    String taskName = ConsoleInput.getString("Enter the name of the task you want to view:");
-    Task task = schedule.getByName(taskName);
-    if (task != null) {
-      if (task.getIdentity() == Task.RECURRING_TASK) {
-        RecurringTask recurringTask = (RecurringTask) task;
-        System.out.printf("%s | %d | %d | %f | %f\n", task.getName(), task.getStartDate(),
-                                                      recurringTask.getEndDate(),
-                                                      task.getStartTime(), task.getDuration());
-      } else {
-        System.out.printf("%s | %d | %f | %f\n", task.getName(), task.getStartDate(),
-                                               task.getStartTime(), task.getDuration());
+  /**
+   * Option 2.1: Displays information of a specific task or the whole schedule.
+   *
+   * @return boolean - whether the task/schedule was viewed successfully or not.
+   */
+  private static boolean viewATaskOrSchedule() {
+    // Get user's view choice.
+    int viewChoice = getViewChoice();
+    
+    // View a task.
+    if (viewChoice == 1) {
+      System.out.print("Tasks: ");
+      displayTaskNames();
+
+      String taskName = ConsoleInput.getString("Enter the name of the task you want to view:");
+      Task task = schedule.getByName(taskName);
+
+      System.out.println();
+      System.out.println("-Task-");
+
+      return displayTaskInfo(task);
+    } else if (viewChoice == 2) {
+      System.out.println("-Schedule-");
+      Iterator<Task> taskIterator = schedule.getTasks().iterator();
+      while (taskIterator.hasNext()) {
+        displayTaskInfo(taskIterator.next());
+        if (taskIterator.hasNext()) {
+          System.out.println();
+        }
       }
-    }
-    else {
-      System.out.println("No task found with the given name.");
+      return true;
     }
     return true;
+  }
+
+
+  /**
+   * Option 2.2: Displays information of the given task.
+   *
+   * @param task - the task to display information of.
+   * @return boolean - whether the task was successfully displayed.
+   */
+  private static boolean displayTaskInfo(Task task) {
+    // Could not find task.
+    if (task == null) {
+      return false;
+    }
+
+    // Print task name: > Task Name.
+    System.out.printf("> %s\n", task.getName());
+    // Print based on task type.
+    if (task.getIdentity() == Task.RECURRING_TASK) {
+      RecurringTask recurringTask = (RecurringTask) task;
+
+      System.out.printf("%14s | %14s | %10s | %8s | %9s\n",
+                        "Start Date", "End Date", "Start Time", "Duration", "Frequency");
+      System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(task.getStartDate()));
+      System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(recurringTask.getEndDate()));
+      System.out.printf("%10s | ",  DateAndTime.timeToString(task.getStartTime()));
+      System.out.printf("%8s | ",  DateAndTime.durationToString(task.getDuration()));
+      System.out.printf("%9s",     recurringTask.getFrequency());
+    } else {
+      System.out.printf("%14s | %10s | %8s\n",
+                        "Start Date", "Start Time", "Duration");
+      System.out.printf("%14s | ", DateAndTime.YYYYMMDDToString(task.getStartDate()));
+      System.out.printf("%10s | ",  DateAndTime.timeToString(task.getStartTime()));
+      System.out.printf("%8s",     DateAndTime.durationToString(task.getDuration()));
+    }
+    System.out.println();
+
+    return true;
+  }
+
+
+  /**
+   * Option 2.3: Asks the user for what they want to view.
+   *
+   * @return int - the user's option.
+   */
+  private static int getViewChoice() {
+    System.out.println("=View Choices=");
+    System.out.println("[1] A Task");
+    System.out.println("[2] Schedule");
+    System.out.println("[0] Cancel");
+    int viewChoice = ConsoleInput.getIntRange("Please select what you want to view.",
+                                              0, 2);
+    System.out.println();
+
+    return viewChoice;
   }
 
 
@@ -251,7 +321,7 @@ public class PSS {
   private static boolean deleteTask() {
     // Displays existing tasks.
     System.out.print("Tasks: ");
-    displayTasks();
+    displayTaskNames();
 
     // Get task name to delete.
     String taskToDelete = ConsoleInput.getString("Enter the name of the task to delete.");
@@ -268,7 +338,7 @@ public class PSS {
   private static boolean editTask() {
     // Displays existing tasks.
     System.out.print("Tasks: ");
-    displayTasks();
+    displayTaskNames();
 
     String taskName = ConsoleInput.getString("Enter the name of the task you want to edit.");
     System.out.println();
@@ -359,7 +429,7 @@ public class PSS {
   /**
    * Option 4.2: prints out all of the existing tasks.
    */
-  private static void displayTasks() {
+  private static void displayTaskNames() {
     // For every task.
     Iterator<Task> taskIterator = schedule.getTasks().iterator();
     // First item exists, just print it.
