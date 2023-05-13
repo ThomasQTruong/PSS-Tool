@@ -1,0 +1,48 @@
+[
+  {
+    "Name": "Recurring2",
+    "Type": "Exercise",
+    "StartDate": 20230514,
+    "StartTime": "3.00",
+    "Duration": "5.00",
+    "EndDate": 20230601,
+    "Frequency": 7
+  },
+  {
+    "Name": "Recurring1",
+    "Type": "Sleep",
+    "StartDate": 20230514,
+    "StartTime": "12.00",
+    "Duration": "6.00",
+    "EndDate": 20230517,
+    "Frequency": 1
+  },
+  {
+    "Name": "Transient1",
+    "Type": "Shopping",
+    "Date": 20230514,
+    "StartTime": "20.00",
+    "Duration": "1.00"
+  },
+  {
+    "Name": "Transient2",
+    "Type": "Appointment",
+    "Date": 20230515,
+    "StartTime": "2.00",
+    "Duration": "4.00"
+  },
+  {
+    "Name": "Anti1",
+    "Type": "Cancellation",
+    "Date": 20230516,
+    "StartTime": "12.00",
+    "Duration": "6.00"
+  },
+  {
+    "Name": "Transient3",
+    "Type": "Visit",
+    "Date": 20240514,
+    "StartTime": "4.00",
+    "Duration": "6.00"
+  }
+]
